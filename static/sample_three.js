@@ -64,23 +64,23 @@ function init() {
   scene.add( light );
 
 	var lines = [
-		[[0, 10, 0], [scaleYears(2000), 10, 0]],
-		[[0, 20, 0], [scaleYears(2000), 20, 0]],
-		[[0, 30, 0], [scaleYears(2000), 30, 0]],
-		[[0, 40, 0], [scaleYears(2000), 40, 0]],
-		[[0, 50, 0], [scaleYears(2000), 50, 0]],
-		[[0, 60, 0], [scaleYears(2000), 60, 0]],
-		[[0, 70, 0], [scaleYears(2000), 70, 0]],
-		[[0, 80, 0], [scaleYears(2000), 80, 0]],
-		[[0, 90, 0], [scaleYears(2000), 90, 0]],
-		[[0, 100, 0], [scaleYears(2000), 100, 0]],
-		[[0, 110, 0], [scaleYears(2000), 110, 0]],
-		[[0, 120, 0], [scaleYears(2000), 120, 0]],
-		[[0, 130, 0], [scaleYears(2000), 130, 0]],
+		[[0, 10, 0], [scaleYears(2010), 10, 0]],
+		[[0, 20, 0], [scaleYears(2010), 20, 0]],
+		[[0, 30, 0], [scaleYears(2010), 30, 0]],
+		[[0, 40, 0], [scaleYears(2010), 40, 0]],
+		[[0, 50, 0], [scaleYears(2010), 50, 0]],
+		[[0, 60, 0], [scaleYears(2010), 60, 0]],
+		[[0, 70, 0], [scaleYears(2010), 70, 0]],
+		[[0, 80, 0], [scaleYears(2010), 80, 0]],
+		[[0, 90, 0], [scaleYears(2010), 90, 0]],
+		[[0, 100, 0], [scaleYears(2010), 100, 0]],
+		[[0, 110, 0], [scaleYears(2010), 110, 0]],
+		[[0, 120, 0], [scaleYears(2010), 120, 0]],
+		[[0, 130, 0], [scaleYears(2010), 130, 0]],
 		[[0, 140, 0], [scaleYears(2000), 140, 0]],
-		[[0, 150, 0], [scaleYears(1990), 150, 0]],
-		[[0, 160, 0], [scaleYears(1990), 160, 0]],
-		[[0, 170, 0], [scaleYears(1990), 170, 0]],
+		[[0, 150, 0], [scaleYears(2000), 150, 0]],
+		[[0, 160, 0], [scaleYears(2000), 160, 0]],
+		[[0, 170, 0], [scaleYears(2000), 170, 0]],
 		[[scaleYears(1880), -10, 0], [scaleYears(1880), 170, 0]],
 		[[scaleYears(1890), -10, 0], [scaleYears(1890), 170, 0]],
 		[[scaleYears(1900), -10, 0], [scaleYears(1900), 170, 0]],
@@ -93,7 +93,8 @@ function init() {
 		[[scaleYears(1970), -10, 0], [scaleYears(1970), 170, 0]],
 		[[scaleYears(1980), -10, 0], [scaleYears(1980), 170, 0]],
 		[[scaleYears(1990), -10, 0], [scaleYears(1990), 170, 0]],
-		[[scaleYears(2000), -10, 0], [scaleYears(2000), 170, 0]]
+		[[scaleYears(2000), -10, 0], [scaleYears(2000), 170, 0]],
+		[[scaleYears(2010), -10, 0], [scaleYears(2010), 130, 0]]
 	];
 	var material = new THREE.LineBasicMaterial({
 		color: 0x999999

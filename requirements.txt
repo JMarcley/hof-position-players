@@ -34,7 +34,7 @@ cloudpickle==0.2.1
 clyent==1.2.1
 colorama==0.3.7
 colorlover==0.2.1
-conda==4.2.9
+conda==4.2.7
 conda-build==2.0.2
 configobj==5.0.6
 contextlib2==0.5.3

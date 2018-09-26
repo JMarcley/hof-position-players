@@ -1,0 +1,27 @@
+#pane {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border: 1px solid black;
+  width: 250px;
+  height: 225px;
+  display: block;
+}
+
+#title {
+  text-align: center;
+}
+
+.years {
+  margin-bottom: 30px;
+  text-align: center;
+  line-height: .1;
+}
+
+.stats {
+  margin-left: 55px;
+}
+
+.numbers {
+  font-weight: bold;
+}

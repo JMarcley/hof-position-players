@@ -31,7 +31,7 @@ chardet==3.0.4
 chest==0.2.3
 click==6.6
 cloudpickle==0.2.1
-clyent==1.2.2
+clyent==1.2.1
 colorama==0.3.7
 colorlover==0.2.1
 conda==4.2.9

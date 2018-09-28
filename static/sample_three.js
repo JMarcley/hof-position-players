@@ -4,14 +4,15 @@ var particleMaterial;
 var raycaster;
 var mouse;
 var objects = [];
-var particleSystem;
-var highlight = undefined;
+var particleSystem = new THREE.Group();
+// var highlight = undefined;
 var data;
 var meta = [];
 var dataPane;
 var loader = new THREE.FontLoader();
 var font;
 var scaleFactor = 2.2;
+var thisPoint = undefined;
 loader.load(
 	// resource URL
 	'static/helvetiker_regular.typeface.json',
@@ -174,43 +175,20 @@ function buildScene(data) {
   var offsetL = 21 / 2;
 
   var playerGeo;
-  // for (var i = 0; i < data.length; i++) {
-  //   playerViz = new THREE.Shape();
-  //   for (var j = 0; j < data[i].stats.length; j++) {
-  //     if (data[i].stats[j].war < 0) {
-  //       continue;
-  //     }
-  //     if (j == 0) {
-  //       playerViz.moveTo(data[i].stats[j].year - 1, 0);
-  //     }
-  //     playerViz.lineTo(data[i].stats[j].year - 1, data[i].stats[j].war);
-  //     // playerViz.moveTo(data[i].stats[j].year - 1, data[i].stats[j].war);
-  //     playerViz.lineTo(data[i].stats[j].year, data[i].stats[j].war);
-  //     // playerViz.moveTo(data[i].stats[j].year, data[i].stats[j].war);
-  //   }
-  //   // playerViz.moveTo(data[i].stats[j].year, 0);
-  //   playerViz.lineTo(data[i].stats[data[i].stats.length - 1].year, 0);
-  //   // playerViz.moveTo(data[i].stats[0].year - 1, 0);
-  //   playerViz.lineTo(data[i].stats[0].year - 1, 0);
-  //
-  //   var geometry = new THREE.ExtrudeGeometry( playerViz, { depth: .2, steps: 1, bevelEnabled: false } );
-  //
-  //   var mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff, opacity: 0.2, transparent: true } ) );
-  //   mesh.position.x = 0;
-  //   mesh.name = data[i].name;
-  //   scene.add(mesh);
-  //   objects.push(mesh);
-  // }
-
-	var points = new THREE.BufferGeometry();
-	var positions = [];
-	var colors = [];
-	var sizes = [];
+	// var points = new THREE.BufferGeometry();
+	// var positions = [];
+	// var colors = [];
+	// var sizes = [];
 	var color = new THREE.Color();
 
   for (var i = 0; i < data.length; i++) {
+		var points = new THREE.BufferGeometry();
+		var positions = [];
+		var colors = [];
+		var sizes = [];
     // var playerColor = new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff } );
     var careerWar = 0;
+		var playerPoint;
     var careerGames = 0;
     var warPer162 = 0
     var playerGeos;
@@ -241,118 +219,23 @@ function buildScene(data) {
 		positions.push( meta[i].position.x );
 		positions.push( meta[i].position.y );
 		positions.push( 0 );
-		color.setHSL( meta[i].warPer162 / 10, 0, 1 - meta[i].warPer162 / 10 );
-		// colors.push( color.r, color.g, color.b );
+		color.setRGB( meta[i].warPer162 / 10, 0, 1 - meta[i].warPer162 / 10 );
 		colors.push( 1, 1, 0 );
-		sizes.push( 4 );
+		sizes.push( 20 );
 
 
-    // for (var j = 0; j < data[i].stats.length; j++) {
-    //   // var geometry = new THREE.RingBufferGeometry(0.001, 2, 50);
-		// 	points.vertices.push( new THREE.Vector3(
-		// 		scaleYears(centroid / careerWar + data[i].stats[0].year),
-		// 		careerWar,
-		// 		-warPer162
-		// 	) );
-		// 	points.index.push(i);
-		// 	playerColor.push( new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff } ) );
-    //   // var mesh = new THREE.Mesh( geometry, playerColor );
-    //   // mesh.index = i;
-    //   // mesh.position.x += scaleYears(centroid / careerWar + data[i].stats[0].year);
-    //   // mesh.position.y += careerWar;
-    //   // mesh.position.z -= warPer162;
-    //   // scene.add(mesh);
-    //   // objects.push(mesh);
-    // }
-		// var mesh = new THREE.Mesh( points, playerColor );
-		// scene.add(mesh);
-		// objects.push(mesh);
+		points.addAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+		points.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
+		points.addAttribute( 'size', new THREE.Float32BufferAttribute( sizes, 1 ) );
 
-    // var mesh = new THREE.Mesh( playerGeo, playerColor );
-    // mesh.position.x += centroid / careerWar + data[i].stats[0].year;
-    // mesh.position.y += careerWar;
-    // mesh.position.z -= warPer162;
-    // mesh.name = data[i].name;
-    // mesh.warPer162 = warPer162;
-    // mesh.careerWar = careerWar;
-    // scene.add(mesh);
-    // objects.push(mesh);
+		var material = new THREE.PointsMaterial({ size: 4 });
+		material.color = [ color.r, color.g, color.b ];
+		material.needsUpdate = true;
+		playerPoint = new THREE.Points( points, material );
+		playerPoint.index = i;
+		particleSystem.children.push( playerPoint );
+		scene.add( playerPoint );
   }
-	points.addAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
-	points.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
-	points.addAttribute( 'size', new THREE.Float32BufferAttribute( sizes, 1 ) );
-	// var material = new THREE.ShaderMaterial( {
-	// 	uniforms: {
-	// 		color:   { value: new THREE.Color( 0x333333 ) },
-	// 		texture: { value: new THREE.TextureLoader().load( "static/disc.png" ) }
-	// 	},
-	// 	vertexShader: document.getElementById( 'vertexshader' ).textContent,
-	// 	fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
-	// 	alphaTest: 0.9
-	// } );
-	var material = new THREE.PointsMaterial({ size: 4 });
-	material.color = [ 0, 0, 0 ];
-	material.needsUpdate = true;
-	console.log(material);
-	particleSystem = new THREE.Points( points, material );
-	scene.add( particleSystem );
-
-	var geometry = particleSystem.geometry;
-	var attributes = geometry.attributes;
-	console.log(geometry.attributes.color);
-	// for (var i = 0; i < geometry.attributes.color.count; i++) {
-	// 	geometry.attributes.color.array[i*3 - 3] = 0;
-	// 	geometry.attributes.color.array[i*3 - 2] = 0;
-	// 	geometry.attributes.color.array[i*3 - 1] = 1;
-	// 	geometry.attributes.color.needsUpdate = true;
-	//
-	//
-	//
-	// 	// console.log(geometry.attributes.color[i*3]);
-	// }
-	// console.log(geometry.attributes.color);
-
-
-  // function Lane() {
-  //   this.num = 0
-  //   this.increment = function() {
-  //     if (this.num < 20) {
-  //       this.num += 1;
-  //     } else {
-  //       this.num = 0;
-  //     }
-  //   }
-  // }
-  // var lane = new Lane();
-  // for (var i = 0; i < data.length; i++) {
-  //   var playerColor = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } );
-  //   for (var j = 0; j < data[i].stats.length; j++) {
-  //     var absWar = Math.sqrt(data[i].stats[j].war * data[i].stats[j].war);
-  //     playerGeo = new THREE.BoxBufferGeometry(1, absWar, 1 );
-  //
-  //     var mesh = new THREE.Mesh( playerGeo, playerColor );
-  //     mesh.position.x += data[i].stats[j].year;
-  //     mesh.position.y += absWar / 2;
-  //     mesh.position.z = -lane.num;
-  //     mesh.name = data[i].name;
-  //     mesh.year = data[i].stats[j].year;
-  //     mesh.war = data[i].stats[j].war;
-  //     scene.add(mesh);
-  //     objects.push(mesh);
-  //   }
-  //   lane.increment();
-  // }
-
-  // var bar = new THREE.PlaneBufferGeometry( 200, 1 );
-  // for (var i = 0; i < 10; i++) {
-  //   var object = new THREE.Mesh( bar, new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff, opacity: 0.5 } ) );
-  //   object.position.x = 1950;
-  //   object.position.y += 1;
-  //
-  //   scene.add(object);
-  //
-  //   objects.push(object);
-  // }
 
 }
 
@@ -505,24 +388,40 @@ function onDocumentMouseMove( event ) {
 	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-	var geometry = particleSystem.geometry;
-	var attributes = geometry.attributes;
-
   raycaster.setFromCamera( mouse, camera );
-  var intersects = raycaster.intersectObject( particleSystem );
+  var intersects = raycaster.intersectObject( particleSystem, true );
   if ( intersects.length > 0 ) {
-		if ( highlight !== undefined ) {
-			attributes.size.array[highlight] = 4;
+		if ( thisPoint === undefined ) {
+			thisPoint = intersects[0].object.index;
+			particleSystem.children[thisPoint].material.size = 10;
+			particleSystem.children[thisPoint].material.size.needsUpdate = true;
+			// particleSystem.children[thisPoint].geometry.attributes.size.array = 10;
+			// particleSystem.children[thisPoint].geometry.attributes.size.needsUpdate = true;
 		}
-		if ( highlight != intersects[0].index ) {
-			console.log(intersects);
-			highlight = intersects[0].index;
-			// console.log(attributes.size[highlight]);
+		// console.log(particleSystem.children[thisPoint].geometry.attributes);
+		if (intersects[0].object.index !== thisPoint) {
+			// console.log('OLD POINT: ', particleSystem.children[thisPoint]);
+			particleSystem.children[thisPoint].material.size = 4;
+			particleSystem.children[thisPoint].material.size.needsUpdate = true;
+			thisPoint = intersects[0].object.index;
+			particleSystem.children[thisPoint].material.size = 10
+			particleSystem.children[thisPoint].material.size.needsUpdate = true;
 
-			attributes.size.array[highlight] = 10;
-			attributes.size.needsUpdate = true;
+			thisPoint = intersects[0].object.index;
 		}
-    var index = intersects[0].index;
+		// var geometry = intersects[0].object.geometry;
+		// var attributes = geometry.attributes;
+		// if ( thisPoint != intersects[0].index ) {
+		// 	// console.log(highlight);
+		// 	console.log(particleSystem);
+		// 	console.log(attributes);
+		// 	highlight = intersects[0].index;
+		// 	// console.log(attributes.size[highlight]);
+		//
+		// 	attributes.size.array = 10
+		// 	attributes.size.needsUpdate = true;
+		// }
+    // var index = intersects[0].object.index;
 		// console.log(intersects[0].index);
     // console.log(meta[intersects[0].object.index]);
   	// intersects[0].object.material.color.setHex( Math.random() * 0xffffff );
@@ -535,7 +434,7 @@ function onDocumentMouseMove( event ) {
     // dataPane.position.z = 10;
     // scene.add(dataPane);
 
-    appendText(meta[index]);
+    appendText(meta[thisPoint]);
 
     // console.log(font);
 
@@ -560,9 +459,11 @@ function onDocumentMouseMove( event ) {
   	// particle.scale.x = particle.scale.y = 16;
   	// scene.add( particle );
   } else {
-		attributes.size.array[highlight] = 4;
-		attributes.size.needsUpdate = true;
-		highlight = undefined;
+		// if (thisPoint !== undefined) {
+		// 	particleSystem.children[thisPoint].material.size = 4;
+		// 	particleSystem.children[thisPoint].material.size.needsUpdate = true;
+		// 	thisPoint = undefined;
+		// }
   }
   /*
   // Parse all the faces
@@ -600,6 +501,7 @@ function parseData(data) {
   var pop = [];
   var thisStatsByYear;
   var playerArray = JSON.parse(data);
+	playerArray.splice(98, 1);
 
   for (var i = 0; i < playerArray.length; i++) {
     thisPlayer = JSON.parse(playerArray[i]);

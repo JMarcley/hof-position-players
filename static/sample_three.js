@@ -11,7 +11,7 @@ var meta = [];
 var dataPane;
 var loader = new THREE.FontLoader();
 var font;
-var scaleFactor = 3;
+var scaleFactor = 2.2;
 loader.load(
 	// resource URL
 	'static/helvetiker_regular.typeface.json',
@@ -41,9 +41,11 @@ animate();
 
 function init() {
   camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-  camera.position.z = 140;
+  camera.position.z = 160;
   camera.position.y = 100;
-  camera.position.x = 2100;
+  camera.position.x = 2065;
+  camera.updateProjectionMatrix();
+	console.log(camera.position);
 
   scene = new THREE.Scene();
   scene.background = new THREE.Color( 0xf0f0f0 );
@@ -64,37 +66,37 @@ function init() {
   scene.add( light );
 
 	var lines = [
-		[[0, 10, 0], [scaleYears(2010), 10, 0]],
-		[[0, 20, 0], [scaleYears(2010), 20, 0]],
-		[[0, 30, 0], [scaleYears(2010), 30, 0]],
-		[[0, 40, 0], [scaleYears(2010), 40, 0]],
-		[[0, 50, 0], [scaleYears(2010), 50, 0]],
-		[[0, 60, 0], [scaleYears(2010), 60, 0]],
-		[[0, 70, 0], [scaleYears(2010), 70, 0]],
-		[[0, 80, 0], [scaleYears(2010), 80, 0]],
-		[[0, 90, 0], [scaleYears(2010), 90, 0]],
-		[[0, 100, 0], [scaleYears(2010), 100, 0]],
-		[[0, 110, 0], [scaleYears(2010), 110, 0]],
-		[[0, 120, 0], [scaleYears(2010), 120, 0]],
-		[[0, 130, 0], [scaleYears(2010), 130, 0]],
-		[[0, 140, 0], [scaleYears(2000), 140, 0]],
-		[[0, 150, 0], [scaleYears(2000), 150, 0]],
-		[[0, 160, 0], [scaleYears(2000), 160, 0]],
-		[[0, 170, 0], [scaleYears(2000), 170, 0]],
-		[[scaleYears(1880), -10, 0], [scaleYears(1880), 170, 0]],
-		[[scaleYears(1890), -10, 0], [scaleYears(1890), 170, 0]],
-		[[scaleYears(1900), -10, 0], [scaleYears(1900), 170, 0]],
-		[[scaleYears(1910), -10, 0], [scaleYears(1910), 170, 0]],
-		[[scaleYears(1920), -10, 0], [scaleYears(1920), 170, 0]],
-		[[scaleYears(1930), -10, 0], [scaleYears(1930), 170, 0]],
-		[[scaleYears(1940), -10, 0], [scaleYears(1940), 170, 0]],
-		[[scaleYears(1950), -10, 0], [scaleYears(1950), 170, 0]],
-		[[scaleYears(1960), -10, 0], [scaleYears(1960), 170, 0]],
-		[[scaleYears(1970), -10, 0], [scaleYears(1970), 170, 0]],
-		[[scaleYears(1980), -10, 0], [scaleYears(1980), 170, 0]],
-		[[scaleYears(1990), -10, 0], [scaleYears(1990), 170, 0]],
-		[[scaleYears(2000), -10, 0], [scaleYears(2000), 170, 0]],
-		[[scaleYears(2010), -10, 0], [scaleYears(2010), 130, 0]]
+		[[scaleYears(1875), 10, 0], [scaleYears(2010), 10, 0]],
+		[[scaleYears(1875), 20, 0], [scaleYears(2010), 20, 0]],
+		[[scaleYears(1875), 30, 0], [scaleYears(2010), 30, 0]],
+		[[scaleYears(1875), 40, 0], [scaleYears(2010), 40, 0]],
+		[[scaleYears(1875), 50, 0], [scaleYears(2010), 50, 0]],
+		[[scaleYears(1875), 60, 0], [scaleYears(2010), 60, 0]],
+		[[scaleYears(1875), 70, 0], [scaleYears(2010), 70, 0]],
+		[[scaleYears(1875), 80, 0], [scaleYears(2010), 80, 0]],
+		[[scaleYears(1875), 90, 0], [scaleYears(2010), 90, 0]],
+		[[scaleYears(1875), 100, 0], [scaleYears(2010), 100, 0]],
+		[[scaleYears(1875), 110, 0], [scaleYears(2010), 110, 0]],
+		[[scaleYears(1875), 120, 0], [scaleYears(2010), 120, 0]],
+		[[scaleYears(1875), 130, 0], [scaleYears(2010), 130, 0]],
+		[[scaleYears(1875), 140, 0], [scaleYears(2010), 140, 0]],
+		[[scaleYears(1875), 150, 0], [scaleYears(2010), 150, 0]],
+		[[scaleYears(1875), 160, 0], [scaleYears(2010), 160, 0]],
+		[[scaleYears(1875), 170, 0], [scaleYears(2010), 170, 0]],
+		[[scaleYears(1880), 5, 0], [scaleYears(1880), 170, 0]],
+		[[scaleYears(1890), 5, 0], [scaleYears(1890), 170, 0]],
+		[[scaleYears(1900), 5, 0], [scaleYears(1900), 170, 0]],
+		[[scaleYears(1910), 5, 0], [scaleYears(1910), 170, 0]],
+		[[scaleYears(1920), 5, 0], [scaleYears(1920), 170, 0]],
+		[[scaleYears(1930), 5, 0], [scaleYears(1930), 170, 0]],
+		[[scaleYears(1940), 5, 0], [scaleYears(1940), 170, 0]],
+		[[scaleYears(1950), 5, 0], [scaleYears(1950), 170, 0]],
+		[[scaleYears(1960), 5, 0], [scaleYears(1960), 170, 0]],
+		[[scaleYears(1970), 5, 0], [scaleYears(1970), 170, 0]],
+		[[scaleYears(1980), 5, 0], [scaleYears(1980), 170, 0]],
+		[[scaleYears(1990), 5, 0], [scaleYears(1990), 170, 0]],
+		[[scaleYears(2000), 5, 0], [scaleYears(2000), 170, 0]],
+		[[scaleYears(2010), 5, 0], [scaleYears(2010), 170, 0]]
 	];
 	var material = new THREE.LineBasicMaterial({
 		color: 0x999999
@@ -119,6 +121,34 @@ function init() {
 	title.appendChild( titleText );
 	pane.appendChild( title );
 
+	var xAxis = document.createElement("Div");
+	xAxis.setAttribute("id", "x-axis");
+	document.body.appendChild( xAxis );
+	// var xLabel = document.createElement("P");
+	// xLabel.setAttribute("class", "x-label");
+	// xAxis.appendChild( xlabel );
+	for (var i = 0; i < 14; i++) {
+		var xLabel = document.createElement("SPAN");
+		xLabel.setAttribute("class", "x-label");
+		xAxis.appendChild( xLabel );
+		var xLabelText = document.createTextNode( 10 * i + 1880 );
+		xLabel.appendChild( xLabelText );
+	}
+
+	var yAxis = document.createElement("Div");
+	yAxis.setAttribute("id", "y-axis");
+	document.body.appendChild( yAxis );
+	// var xLabel = document.createElement("P");
+	// xLabel.setAttribute("class", "x-label");
+	// xAxis.appendChild( xlabel );
+	for (var i = 0; i < 17; i++) {
+		var yLabel = document.createElement("P");
+		yLabel.setAttribute("class", "y-label");
+		yAxis.appendChild( yLabel );
+		var yLabelText = document.createTextNode( 170 - 10 * i );
+		yLabel.appendChild( yLabelText );
+	}
+
   window.addEventListener( 'resize', onWindowResize, false );
   // document.addEventListener( 'mousedown', onDocumentMouseDown, false );
   document.addEventListener( 'mousemove', onDocumentMouseMove, false );
@@ -137,7 +167,7 @@ function buildScene(data) {
   var maxYear = determineMaxYear(data);
   var years = maxYear - minYear + 1;
   midYear = Math.ceil( years / 2 ) + minYear;
-  camera.position.x = midYear + years * scaleFactor / 2;
+  // camera.position.x = midYear + years * scaleFactor / 2;
 
   var barsInScreen = 21; // 80
   var scale = scaleYears(barsInScreen, years);

@@ -6,6 +6,8 @@
   width: 250px;
   height: 225px;
   display: block;
+  background-color: white;
+  z-index: 2;
 }
 
 #title {
@@ -24,4 +26,27 @@
 
 .numbers {
   font-weight: bold;
+}
+
+#x-axis {
+  position: absolute;
+  bottom: 50px;
+  left: 94px;
+  z-index: 2;
+}
+
+.x-label {
+  margin-left: 31px;
+}
+
+#y-axis {
+  position: absolute;
+  bottom: 70px;
+  left: 80px;
+  z-index: 2;
+}
+
+.y-label {
+  line-height: .7em;
+  padding-top: 1.5px;
 }

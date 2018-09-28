@@ -50,3 +50,14 @@
   line-height: .7em;
   padding-top: 1.5px;
 }
+
+#view-radio {
+  position: absolute;
+  background-color: white;
+  width: 250px;
+  top: 235px;
+  right: 5px;
+  border: 1px solid black;
+  display: block;
+  z-index: 2;
+}

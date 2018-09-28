@@ -8,6 +8,11 @@
 		<link rel="stylesheet" type="text/css" href="static/sample_three.css">
 	</head>
 	<body>
+		<div id="view-radio">
+			<label for="view">Show: </label>
+			<input type="radio" name="view-radio" value="0" checked="checked">WAR</input>
+			<input type="radio" name="view-radio" value="1" >WAR per 162</input>
+		</div>
 		<script type="x-shader/x-vertex" id="vertexshader">
 			attribute float size;
 			attribute vec3 customColor;

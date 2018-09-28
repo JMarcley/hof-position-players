@@ -5,6 +5,7 @@ var raycaster;
 var mouse;
 var objects = [];
 var particleSystem = new THREE.Group();
+var particleSystemIntermediate;
 // var highlight = undefined;
 var data;
 var meta = [];
@@ -12,7 +13,25 @@ var dataPane;
 var loader = new THREE.FontLoader();
 var font;
 var scaleFactor = 2.2;
+var animationFrames = 50;
+var cameraAnimationFrames = animationFrames * 2;
+var animationState = { y: 0, z: 0, camera: 0 };
+var view = 0;
 var thisPoint = undefined;
+var linesZero = [];
+var linesOne = [];
+var cameraPosition = [
+	{
+		x: 2065,
+		y: 100,
+		z: 160
+	},
+	{
+		x: 2065,
+		y: 160,
+		z: 5
+	}
+];
 loader.load(
 	// resource URL
 	'static/helvetiker_regular.typeface.json',
@@ -42,11 +61,21 @@ animate();
 
 function init() {
   camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-  camera.position.z = 160;
-  camera.position.y = 100;
-  camera.position.x = 2065;
+  camera.position.x = cameraPosition[0].x;
+  camera.position.y = cameraPosition[0].y;
+  camera.position.z = cameraPosition[0].z;
+	camera.lookAt( new THREE.Vector3( 2065, 100, 0 ) );
+	// camera.up = new THREE.Vector3( 0, .5, -.5 );
   camera.updateProjectionMatrix();
-	console.log(camera.position);
+	camera.userData.animation = [];
+	for (var i = 0; i <= cameraAnimationFrames; i++) {
+		camera.userData.animation.push({
+			x: cameraPosition[0].x,
+			y: cameraPosition[0].y - ((cameraPosition[0].y - cameraPosition[1].y) * (i)/(cameraAnimationFrames)),
+			z: cameraPosition[0].z - ((cameraPosition[0].z - cameraPosition[1].z) * (i)/(cameraAnimationFrames))
+		});
+	}
+	console.log(camera);
 
   scene = new THREE.Scene();
   scene.background = new THREE.Color( 0xf0f0f0 );
@@ -66,50 +95,54 @@ function init() {
   light.position.set( -1, 1, -1 ).normalize();
   scene.add( light );
 
-	var lines = [
-		[[scaleYears(1875), 10, 0], [scaleYears(2010), 10, 0]],
-		[[scaleYears(1875), 20, 0], [scaleYears(2010), 20, 0]],
-		[[scaleYears(1875), 30, 0], [scaleYears(2010), 30, 0]],
-		[[scaleYears(1875), 40, 0], [scaleYears(2010), 40, 0]],
-		[[scaleYears(1875), 50, 0], [scaleYears(2010), 50, 0]],
-		[[scaleYears(1875), 60, 0], [scaleYears(2010), 60, 0]],
-		[[scaleYears(1875), 70, 0], [scaleYears(2010), 70, 0]],
-		[[scaleYears(1875), 80, 0], [scaleYears(2010), 80, 0]],
-		[[scaleYears(1875), 90, 0], [scaleYears(2010), 90, 0]],
-		[[scaleYears(1875), 100, 0], [scaleYears(2010), 100, 0]],
-		[[scaleYears(1875), 110, 0], [scaleYears(2010), 110, 0]],
-		[[scaleYears(1875), 120, 0], [scaleYears(2010), 120, 0]],
-		[[scaleYears(1875), 130, 0], [scaleYears(2010), 130, 0]],
-		[[scaleYears(1875), 140, 0], [scaleYears(2010), 140, 0]],
-		[[scaleYears(1875), 150, 0], [scaleYears(2010), 150, 0]],
-		[[scaleYears(1875), 160, 0], [scaleYears(2010), 160, 0]],
-		[[scaleYears(1875), 170, 0], [scaleYears(2010), 170, 0]],
-		[[scaleYears(1880), 5, 0], [scaleYears(1880), 170, 0]],
-		[[scaleYears(1890), 5, 0], [scaleYears(1890), 170, 0]],
-		[[scaleYears(1900), 5, 0], [scaleYears(1900), 170, 0]],
-		[[scaleYears(1910), 5, 0], [scaleYears(1910), 170, 0]],
-		[[scaleYears(1920), 5, 0], [scaleYears(1920), 170, 0]],
-		[[scaleYears(1930), 5, 0], [scaleYears(1930), 170, 0]],
-		[[scaleYears(1940), 5, 0], [scaleYears(1940), 170, 0]],
-		[[scaleYears(1950), 5, 0], [scaleYears(1950), 170, 0]],
-		[[scaleYears(1960), 5, 0], [scaleYears(1960), 170, 0]],
-		[[scaleYears(1970), 5, 0], [scaleYears(1970), 170, 0]],
-		[[scaleYears(1980), 5, 0], [scaleYears(1980), 170, 0]],
-		[[scaleYears(1990), 5, 0], [scaleYears(1990), 170, 0]],
-		[[scaleYears(2000), 5, 0], [scaleYears(2000), 170, 0]],
-		[[scaleYears(2010), 5, 0], [scaleYears(2010), 170, 0]]
+	var lines0 = [
+		[[scaleYears(1875), 10, -1], [scaleYears(2010), 10, -1]],
+		[[scaleYears(1875), 20, -1], [scaleYears(2010), 20, -1]],
+		[[scaleYears(1875), 30, -1], [scaleYears(2010), 30, -1]],
+		[[scaleYears(1875), 40, -1], [scaleYears(2010), 40, -1]],
+		[[scaleYears(1875), 50, -1], [scaleYears(2010), 50, -1]],
+		[[scaleYears(1875), 60, -1], [scaleYears(2010), 60, -1]],
+		[[scaleYears(1875), 70, -1], [scaleYears(2010), 70, -1]],
+		[[scaleYears(1875), 80, -1], [scaleYears(2010), 80, -1]],
+		[[scaleYears(1875), 90, -1], [scaleYears(2010), 90, -1]],
+		[[scaleYears(1875), 100, -1], [scaleYears(2010), 100, -1]],
+		[[scaleYears(1875), 110, -1], [scaleYears(2010), 110, -1]],
+		[[scaleYears(1875), 120, -1], [scaleYears(2010), 120, -1]],
+		[[scaleYears(1875), 130, -1], [scaleYears(2010), 130, -1]],
+		[[scaleYears(1875), 140, -1], [scaleYears(2010), 140, -1]],
+		[[scaleYears(1875), 150, -1], [scaleYears(2010), 150, -1]],
+		[[scaleYears(1875), 160, -1], [scaleYears(2010), 160, -1]],
+		[[scaleYears(1875), 170, -1], [scaleYears(2010), 170, -1]],
+		[[scaleYears(1880), 5, -1], [scaleYears(1880), 170, -1]],
+		[[scaleYears(1890), 5, -1], [scaleYears(1890), 170, -1]],
+		[[scaleYears(1900), 5, -1], [scaleYears(1900), 170, -1]],
+		[[scaleYears(1910), 5, -1], [scaleYears(1910), 170, -1]],
+		[[scaleYears(1920), 5, -1], [scaleYears(1920), 170, -1]],
+		[[scaleYears(1930), 5, -1], [scaleYears(1930), 170, -1]],
+		[[scaleYears(1940), 5, -1], [scaleYears(1940), 170, -1]],
+		[[scaleYears(1950), 5, -1], [scaleYears(1950), 170, -1]],
+		[[scaleYears(1960), 5, -1], [scaleYears(1960), 170, -1]],
+		[[scaleYears(1970), 5, -1], [scaleYears(1970), 170, -1]],
+		[[scaleYears(1980), 5, -1], [scaleYears(1980), 170, -1]],
+		[[scaleYears(1990), 5, -1], [scaleYears(1990), 170, -1]],
+		[[scaleYears(2000), 5, -1], [scaleYears(2000), 170, -1]],
+		[[scaleYears(2010), 5, -1], [scaleYears(2010), 170, -1]]
 	];
 	var material = new THREE.LineBasicMaterial({
-		color: 0x999999
+		color: 0x999999,
+		transparent: true,
+		opacity: 1
 	});
-	for (var i = 0; i < lines.length; i++) {
+	for (var i = 0; i < lines0.length; i++) {
 		var lineGeo = new THREE.Geometry();
 		lineGeo.vertices.push(
-			new THREE.Vector3( lines[i][0][0], lines[i][0][1], lines[i][0][2] ),
-			new THREE.Vector3( lines[i][1][0], lines[i][1][1], lines[i][1][2] )
+			new THREE.Vector3( lines0[i][0][0], lines0[i][0][1], lines0[i][0][2] ),
+			new THREE.Vector3( lines0[i][1][0], lines0[i][1][1], lines0[i][1][2] )
 		);
 		var line = new THREE.Line( lineGeo, material );
+		linesZero.push(line);
 		scene.add(line);
+
 	}
 
 	var pane = document.createElement("Div");
@@ -217,7 +250,7 @@ function buildScene(data) {
     ));
 
 		positions.push( meta[i].position.x );
-		positions.push( meta[i].position.y );
+		positions.push( 0 );
 		positions.push( 0 );
 		color.setRGB( meta[i].warPer162 / 10, 0, 1 - meta[i].warPer162 / 10 );
 		colors.push( 1, 1, 0 );
@@ -233,6 +266,41 @@ function buildScene(data) {
 		material.needsUpdate = true;
 		playerPoint = new THREE.Points( points, material );
 		playerPoint.index = i;
+		var animateZOut = [];
+		for (var j = 0; j <= animationFrames; j++) {
+			var x = meta[i].position.x;
+			var y = meta[i].position.y;
+			var z = ( j / animationFrames ) * meta[i].warPer162;
+			animateZOut.push({ x: x, y: y, z: z });
+		}
+		var animateZIn = [];
+		for (var j = 0; j <= animationFrames; j++) {
+			var x = meta[i].position.x;
+			var y = meta[i].position.y;
+			var z = meta[i].warPer162 - ( j / animationFrames ) * meta[i].warPer162;
+			animateZIn.push({ x: x, y: y, z: z });
+		}
+		var animateYOut = [];
+		for (var j = 0; j <= animationFrames; j++) {
+			var x = meta[i].position.x;
+			var y = ( j / animationFrames ) * meta[i].position.y;
+			var z = 0;
+			animateYOut.push({ x: x, y: y, z: z });
+		}
+		var animateYIn = [];
+		for (var j = 0; j <= animationFrames; j++) {
+			var x = meta[i].position.x;
+			var y = meta[i].position.y - ( j / animationFrames ) * meta[i].position.y;
+			var z = 0;
+			animateYIn.push({ x: x, y: y, z: z });
+		}
+		playerPoint.userData = {
+			animateZOut: animateZOut,
+			animateZIn: animateZIn,
+			animateYOut: animateYOut,
+			animateYIn, animateYIn
+		};
+
 		particleSystem.children.push( playerPoint );
 		scene.add( playerPoint );
   }
@@ -339,8 +407,106 @@ function appendText(data) {
 
 }
 
+function animatePoints() {
+	view = checkRadio();
+	if (view == 0 && animationState.camera !== 0) {
+		console.log('move camera to 0');
+		animationState.camera = animationState.camera - 1;
+		camera.position.y = camera.userData.animation[animationState.camera].y;
+		camera.position.z = camera.userData.animation[animationState.camera].z;
+		camera.lookAt( new THREE.Vector3( 2065, 100, 0 ) );
+		camera.updateProjectionMatrix();
+		for (var i = 0; i < linesZero.length; i++) {
+			linesZero[i].material.opacity = 1 - animationState.camera / cameraAnimationFrames;
+			linesZero[i].material.needsUpdate = true;
+		}
+	}
+	if (view == 1 && animationState.camera !== cameraAnimationFrames) {
+		console.log('move camera to 1');
+		animationState.camera = animationState.camera + 1;
+		camera.position.y = camera.userData.animation[animationState.camera].y;
+		camera.position.z = camera.userData.animation[animationState.camera].z;
+		camera.lookAt( new THREE.Vector3( 2065, 100, 0 ) );
+		camera.updateProjectionMatrix();
+		for (var i = 0; i < linesZero.length; i++) {
+			linesZero[i].material.opacity = 1 - animationState.camera / cameraAnimationFrames;
+			linesZero[i].material.needsUpdate = true;
+		}
+	}
+	if (view == 0 && animationState.z !== 0) {
+		// console.log('animate Z in');
+		animationState.z = animationState.z - 1;
+		for (var i = 0; i < particleSystem.children.length; i++) {
+			particleSystem.children[i].position.z = particleSystem.children[i].userData.animateZOut[animationState.z].z;
+			// particleSystem.children[i].geometry.attributes.position.array = new Float32Array([
+			// 	particleSystem.children[i].userData.animateZOut[animationState.z].x,
+			// 	particleSystem.children[i].userData.animateZOut[animationState.z].y,
+			// 	particleSystem.children[i].userData.animateZOut[animationState.z].z
+			// ]);
+			// particleSystem.children[i].geometry.attributes.position.needsUpdate = true;
+			// particleSystem.children[i].material.needsUpdate = true;
+		}
+	} else if (view == 0 && animationState.z === 0 && animationState.y !== animationFrames) {
+		// console.log('animate Y out');
+		animationState.y = animationState.y + 1;
+		for (var i = 0; i < particleSystem.children.length; i++) {
+			particleSystem.children[i].position.y = particleSystem.children[i].userData.animateYOut[animationState.y].y;
+			// particleSystem.children[i].geometry.attributes.position.array = new Float32Array([
+			// 	particleSystem.children[i].userData.animateYOut[animationState.y].x,
+			// 	particleSystem.children[i].userData.animateYOut[animationState.y].y,
+			// 	particleSystem.children[i].userData.animateYOut[animationState.y].z
+			// ]);
+			// particleSystem.children[i].geometry.attributes.position.needsUpdate = true;
+			// particleSystem.children[i].material.needsUpdate = true;
+		}
+	} else if (view == 1 && animationState.y !== 0) {
+		// console.log('animate Y in');
+		animationState.y = animationState.y - 1;
+		for (var i = 0; i < particleSystem.children.length; i++) {
+			particleSystem.children[i].position.y = particleSystem.children[i].userData.animateYOut[animationState.y].y;
+			// particleSystem.children[i].geometry.attributes.position.array = new Float32Array([
+			// 	particleSystem.children[i].userData.animateYOut[animationState.y].x,
+			// 	particleSystem.children[i].userData.animateYOut[animationState.y].y,
+			// 	particleSystem.children[i].userData.animateYOut[animationState.y].z
+			// ]);
+			// particleSystem.children[i].geometry.attributes.position.needsUpdate = true;
+			// particleSystem.children[i].material.needsUpdate = true;
+		}
+	} else if (view == 1 && animationState.z !== animationFrames) {
+		// console.log('animate Z out');
+		animationState.z = animationState.z + 1;
+		for (var i = 0; i < particleSystem.children.length; i++) {
+			particleSystem.children[i].position.z = particleSystem.children[i].userData.animateZOut[animationState.z].z;
+			// particleSystem.children[i].geometry.attributes.position.array = new Float32Array([
+			// 	particleSystem.children[i].userData.animateZOut[animationState.z].x,
+			// 	particleSystem.children[i].userData.animateZOut[animationState.z].y,
+			// 	particleSystem.children[i].userData.animateZOut[animationState.z].z
+			// ]);
+			// particleSystem.children[i].geometry.attributes.position.needsUpdate = true;
+			// particleSystem.children[i].material.needsUpdate = true;
+		}
+	}
+	// if (view == 0 && animationState.y == animationFrames && animationState.z == 0) {
+	// 	particleSystemIntermediate = particleSystem.clone();
+	// 	particleSystem = new THREE.Group();
+	// 	for (var i = 0; i < particleSystem.children.length; i++) {
+	// 		particleSystem.add(particleSystemIntermediate.children[i]);
+	// 	}
+	// 	resetGroup = false;
+	// } else if (view == 1 && animationState.y == 0 && animationState.z == animationFrames) {
+	// 	particleSystemIntermediate = particleSystem.clone();
+	// 	particleSystem = new THREE.Group();
+	// 	for (var i = 0; i < particleSystem.children.length; i++) {
+	// 		particleSystem.add(particleSystemIntermediate.children[i]);
+	// 	}
+	// 	resetGroup = false;
+	// }
+}
+
 function animate() {
   requestAnimationFrame( animate );
+
+	animatePoints();
 
   // object.rotation.x += 0.01;
   // object.rotation.y += 0.01;
@@ -383,6 +549,20 @@ function onWindowResize() {
 //
 // }
 
+function checkRadio() {
+	var radios = document.getElementsByName('view-radio');
+
+	for (var i = 0, length = radios.length; i < length; i++) {
+	    if (radios[i].checked) {
+	        // do whatever you want with the checked radio
+	        return radios[i].value;
+
+	        // only one radio can be logically checked, don't check the rest
+	        break;
+	    }
+	}
+}
+
 function onDocumentMouseMove( event ) {
   event.preventDefault();
 	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -390,6 +570,8 @@ function onDocumentMouseMove( event ) {
 
   raycaster.setFromCamera( mouse, camera );
   var intersects = raycaster.intersectObject( particleSystem, true );
+	// console.log(particleSystem);
+	// console.log(raycaster);
   if ( intersects.length > 0 ) {
 		if ( thisPoint === undefined ) {
 			thisPoint = intersects[0].object.index;

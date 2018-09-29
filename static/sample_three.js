@@ -14,7 +14,7 @@ var loader = new THREE.FontLoader();
 var font;
 var scaleFactor = 2.2;
 var animationFrames = 50;
-var cameraAnimationFrames = animationFrames * 2;
+var cameraAnimationFrames = animationFrames * 1.6;
 var animationState = { y: 0, z: 0, camera: 0 };
 var view = 0;
 var thisPoint = undefined;
@@ -32,6 +32,23 @@ var cameraPosition = [
 		z: 5
 	}
 ];
+var lookAt = [
+	{
+		x: 2065,
+		y: 100,
+		z: 0
+	},
+	{
+		x: 2065,
+		y: 40,
+		z: 5
+	},
+	{
+		x: 2065,
+		y: 0,
+		z: 5
+	}
+]
 loader.load(
 	// resource URL
 	'static/helvetiker_regular.typeface.json',
@@ -75,7 +92,22 @@ function init() {
 			z: cameraPosition[0].z - ((cameraPosition[0].z - cameraPosition[1].z) * (i)/(cameraAnimationFrames))
 		});
 	}
-	console.log(camera);
+	camera.userData.lookAt = [];
+	for (var i = 0; i <= cameraAnimationFrames; i++) {
+		if (i <= cameraAnimationFrames / 2) {
+			camera.userData.lookAt.push({
+				x: lookAt[0].x,
+				y: lookAt[0].y - ((lookAt[0].y - lookAt[1].y) * (i*2)/(cameraAnimationFrames)),
+				z: lookAt[0].z - ((lookAt[0].z - lookAt[1].z) * (i*2)/(cameraAnimationFrames)),
+			});
+		} else {
+			camera.userData.lookAt.push({
+				x: lookAt[1].x,
+				y: lookAt[1].y - ((lookAt[1].y - lookAt[2].y) * (i*2)/(cameraAnimationFrames)),
+				z: lookAt[1].z - ((lookAt[1].z - lookAt[2].z) * (i*2)/(cameraAnimationFrames)),
+			});
+		}
+	}
 
   scene = new THREE.Scene();
   scene.background = new THREE.Color( 0xf0f0f0 );
@@ -128,8 +160,35 @@ function init() {
 		[[scaleYears(2000), 5, -1], [scaleYears(2000), 170, -1]],
 		[[scaleYears(2010), 5, -1], [scaleYears(2010), 170, -1]]
 	];
+	var lines1 = [
+		[[scaleYears(1875), -1, scaleZ(1)], [scaleYears(2010), -1, scaleZ(1)]],
+		[[scaleYears(1875), -1, scaleZ(2)], [scaleYears(2010), -1, scaleZ(2)]],
+		[[scaleYears(1875), -1, scaleZ(3)], [scaleYears(2010), -1, scaleZ(3)]],
+		[[scaleYears(1875), -1, scaleZ(4)], [scaleYears(2010), -1, scaleZ(4)]],
+		[[scaleYears(1875), -1, scaleZ(5)], [scaleYears(2010), -1, scaleZ(5)]],
+		[[scaleYears(1875), -1, scaleZ(6)], [scaleYears(2010), -1, scaleZ(6)]],
+		[[scaleYears(1875), -1, scaleZ(7)], [scaleYears(2010), -1, scaleZ(7)]],
+		[[scaleYears(1875), -1, scaleZ(8)], [scaleYears(2010), -1, scaleZ(8)]],
+		[[scaleYears(1875), -1, scaleZ(9)], [scaleYears(2010), -1, scaleZ(9)]],
+		[[scaleYears(1875), -1, scaleZ(10)], [scaleYears(2010), -1, scaleZ(10)]],
+		[[scaleYears(1875), -1, scaleZ(11)], [scaleYears(2010), -1, scaleZ(11)]],
+		[[scaleYears(1880), -1, scaleZ(1)], [scaleYears(1880), -1, scaleZ(11)]],
+		[[scaleYears(1890), -1, scaleZ(1)], [scaleYears(1890), -1, scaleZ(11)]],
+		[[scaleYears(1900), -1, scaleZ(1)], [scaleYears(1900), -1, scaleZ(11)]],
+		[[scaleYears(1910), -1, scaleZ(1)], [scaleYears(1910), -1, scaleZ(11)]],
+		[[scaleYears(1920), -1, scaleZ(1)], [scaleYears(1920), -1, scaleZ(11)]],
+		[[scaleYears(1930), -1, scaleZ(1)], [scaleYears(1930), -1, scaleZ(11)]],
+		[[scaleYears(1940), -1, scaleZ(1)], [scaleYears(1940), -1, scaleZ(11)]],
+		[[scaleYears(1950), -1, scaleZ(1)], [scaleYears(1950), -1, scaleZ(11)]],
+		[[scaleYears(1960), -1, scaleZ(1)], [scaleYears(1960), -1, scaleZ(11)]],
+		[[scaleYears(1970), -1, scaleZ(1)], [scaleYears(1970), -1, scaleZ(11)]],
+		[[scaleYears(1980), -1, scaleZ(1)], [scaleYears(1980), -1, scaleZ(11)]],
+		[[scaleYears(1990), -1, scaleZ(1)], [scaleYears(1990), -1, scaleZ(11)]],
+		[[scaleYears(2000), -1, scaleZ(1)], [scaleYears(2000), -1, scaleZ(11)]],
+		[[scaleYears(2010), -1, scaleZ(1)], [scaleYears(2010), -1, scaleZ(11)]]
+	];
 	var material = new THREE.LineBasicMaterial({
-		color: 0x999999,
+		color:0x999999,
 		transparent: true,
 		opacity: 1
 	});
@@ -141,6 +200,22 @@ function init() {
 		);
 		var line = new THREE.Line( lineGeo, material );
 		linesZero.push(line);
+		scene.add(line);
+
+	}
+	var material = new THREE.LineBasicMaterial({
+		color:0x999999,
+		transparent: true,
+		opacity: 0
+	});
+	for (var i = 0; i < lines1.length; i++) {
+		var lineGeo = new THREE.Geometry();
+		lineGeo.vertices.push(
+			new THREE.Vector3( lines1[i][0][0], lines1[i][0][1], lines1[i][0][2] ),
+			new THREE.Vector3( lines1[i][1][0], lines1[i][1][1], lines1[i][1][2] )
+		);
+		var line = new THREE.Line( lineGeo, material );
+		linesOne.push(line);
 		scene.add(line);
 
 	}
@@ -270,14 +345,14 @@ function buildScene(data) {
 		for (var j = 0; j <= animationFrames; j++) {
 			var x = meta[i].position.x;
 			var y = meta[i].position.y;
-			var z = ( j / animationFrames ) * meta[i].warPer162;
+			var z = ( j / animationFrames ) * scaleZ(meta[i].warPer162);
 			animateZOut.push({ x: x, y: y, z: z });
 		}
 		var animateZIn = [];
 		for (var j = 0; j <= animationFrames; j++) {
 			var x = meta[i].position.x;
 			var y = meta[i].position.y;
-			var z = meta[i].warPer162 - ( j / animationFrames ) * meta[i].warPer162;
+			var z = scaleZ(meta[i].warPer162) - ( j / animationFrames ) * scaleZ(meta[i].warPer162);
 			animateZIn.push({ x: x, y: y, z: z });
 		}
 		var animateYOut = [];
@@ -414,23 +489,42 @@ function animatePoints() {
 		animationState.camera = animationState.camera - 1;
 		camera.position.y = camera.userData.animation[animationState.camera].y;
 		camera.position.z = camera.userData.animation[animationState.camera].z;
-		camera.lookAt( new THREE.Vector3( 2065, 100, 0 ) );
+		camera.lookAt( new THREE.Vector3(
+			camera.userData.lookAt[animationState.camera].x,
+			camera.userData.lookAt[animationState.camera].y,
+			camera.userData.lookAt[animationState.camera].z
+		) );
+		// camera.lookAt( new THREE.Vector3( 2065, 100, 0 ) );
 		camera.updateProjectionMatrix();
 		for (var i = 0; i < linesZero.length; i++) {
 			linesZero[i].material.opacity = 1 - animationState.camera / cameraAnimationFrames;
 			linesZero[i].material.needsUpdate = true;
 		}
+		for (var i = 0; i < linesOne.length; i++) {
+			linesOne[i].material.opacity = animationState.camera / cameraAnimationFrames;
+			linesOne[i].material.needsUpdate = true;
+		}
+
 	}
 	if (view == 1 && animationState.camera !== cameraAnimationFrames) {
 		console.log('move camera to 1');
 		animationState.camera = animationState.camera + 1;
 		camera.position.y = camera.userData.animation[animationState.camera].y;
 		camera.position.z = camera.userData.animation[animationState.camera].z;
-		camera.lookAt( new THREE.Vector3( 2065, 100, 0 ) );
+		camera.lookAt( new THREE.Vector3(
+			camera.userData.lookAt[animationState.camera].x,
+			camera.userData.lookAt[animationState.camera].y,
+			camera.userData.lookAt[animationState.camera].z
+		) );
+		// camera.lookAt( new THREE.Vector3( 2065, 0, 5 ) );
 		camera.updateProjectionMatrix();
 		for (var i = 0; i < linesZero.length; i++) {
 			linesZero[i].material.opacity = 1 - animationState.camera / cameraAnimationFrames;
 			linesZero[i].material.needsUpdate = true;
+		}
+		for (var i = 0; i < linesOne.length; i++) {
+			linesOne[i].material.opacity = animationState.camera / cameraAnimationFrames;
+			linesOne[i].material.needsUpdate = true;
 		}
 	}
 	if (view == 0 && animationState.z !== 0) {
@@ -657,6 +751,10 @@ function onDocumentMouseMove( event ) {
 
 function scaleYears(year) {
 	return ( (year - 1871) * scaleFactor ) + 1871
+}
+
+function scaleZ(war) {
+	return -16 * war + 100;
 }
 
 function loadJSON(callback) {

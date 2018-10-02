@@ -276,11 +276,21 @@ function init() {
 	pane.setAttribute("id", "pane");
 	document.body.appendChild( pane );
 
-	var title = document.createElement("H2");
+	var paneTitle = document.createElement("H2");
+	paneTitle.setAttribute("id", "pane-title");
+	var titleText = document.createTextNode( "Hover on a point to see more details" );
+	paneTitle.appendChild( titleText );
+	pane.appendChild( paneTitle );
+
+	var header = document.createElement("Div");
+	header.setAttribute("id", "header");
+	document.body.appendChild( header );
+
+	var title = document.createElement("H1");
 	title.setAttribute("id", "title");
-	var titleText = document.createTextNode( "Click on a point to see more details" );
+	var titleText = document.createTextNode( "Distribution of Career Batting Wins Above Replacement (WAR) for Hall of Fame Position Players" );
 	title.appendChild( titleText );
-	pane.appendChild( title );
+	header.appendChild( title );
 
 	// var xAxis = document.createElement("Div");
 	// xAxis.setAttribute("id", "x-axis");
@@ -340,14 +350,21 @@ function init() {
 			yLabels[i][1] - camera.position.y,
 			yLabels[i][2] - camera.position.z
 		);
-		console.log(pos);
 		var posXY = pos.applyMatrix4(camera.projectionMatrix);
-		console.log(posXY);
-		console.log(window.innerWidth);
 		var left = posXY.x * window.innerWidth / 2 + window.innerWidth / 2;
 		var bottom = posXY.y * window.innerHeight / 2 + window.innerHeight / 2;
-		console.log(left);
-		console.log(bottom);
+		if (i == Math.floor(yLabels.length / 2)) {
+			var axisLabelDiv = document.createElement("DIV");
+			var axisLabelP = document.createElement("P");
+			var axisLabelText = document.createTextNode("Career WAR");
+			axisLabelP.appendChild( axisLabelText );
+			axisLabelDiv.setAttribute("id", "y-axis-label");
+			axisLabelDiv.appendChild( axisLabelP );
+			axisLabelDiv.style.left = left;
+			axisLabelDiv.style.bottom = bottom;
+			document.body.appendChild( axisLabelDiv );
+		}
+
 		var box = document.createElement("DIV");
 		box.setAttribute("class", "y-label");
 		box.style.left = left;
@@ -368,6 +385,18 @@ function init() {
 		var posXY = pos.applyMatrix4(camera.projectionMatrix);
 		var left = posXY.x * window.innerWidth / 2 + window.innerWidth / 2;
 		var bottom = posXY.y * window.innerHeight / 2 + window.innerHeight / 2;
+		if (i == Math.floor(zLabels.length / 2)) {
+			var axisLabelDiv = document.createElement("DIV");
+			var axisLabelP = document.createElement("P");
+			var axisLabelText = document.createTextNode("Career WAR per 162 game season");
+			axisLabelP.appendChild( axisLabelText );
+			axisLabelDiv.setAttribute("id", "z-axis-label");
+			axisLabelDiv.appendChild( axisLabelP );
+			axisLabelDiv.style.left = left;
+			axisLabelDiv.style.bottom = bottom;
+			document.body.appendChild( axisLabelDiv );
+		}
+
 		var box = document.createElement("DIV");
 		box.setAttribute("class", "z-label");
 		box.style.left = left;
@@ -725,6 +754,8 @@ function animatePoints() {
 
 	if (animationState.y == animationFrames && animationState !== animationFrames) {
 		var showAxis = document.getElementsByClassName("y-label");
+		var axisLabel = document.getElementById("y-axis-label");
+		axisLabel.style.opacity = 1;
 		for (var i = 0; i < showAxis.length; i++) {
 			showAxis[i].style.opacity = 1;
 		}
@@ -735,6 +766,8 @@ function animatePoints() {
 	}
 	if (animationState.y == animationFrames - 1 && animationState !== animationFrames) {
 		var showAxis = document.getElementsByClassName("y-label");
+		var axisLabel = document.getElementById("y-axis-label");
+		axisLabel.style.opacity = 0;
 		for (var i = 0; i < showAxis.length; i++) {
 			showAxis[i].style.opacity = 0;
 		}
@@ -745,6 +778,8 @@ function animatePoints() {
 	}
 	if (animationState.z == animationFrames && animationState.y !== animationFrames) {
 		var showAxis = document.getElementsByClassName("z-label");
+		var axisLabel = document.getElementById("z-axis-label");
+		axisLabel.style.opacity = 1;
 		for (var i = 0; i < showAxis.length; i++) {
 			showAxis[i].style.opacity = 1;
 		}
@@ -755,6 +790,8 @@ function animatePoints() {
 	}
 	if (animationState.z == animationFrames - 1 && animationState !== animationFrames) {
 		var showAxis = document.getElementsByClassName("z-label");
+		var axisLabel = document.getElementById("y-axis-label");
+		axisLabel.style.opacity = 0;
 		for (var i = 0; i < showAxis.length; i++) {
 			showAxis[i].style.opacity = 0;
 		}

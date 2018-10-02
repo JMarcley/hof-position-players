@@ -3,14 +3,32 @@
   top: 5px;
   right: 5px;
   border: 1px solid black;
-  width: 250px;
-  height: 225px;
+  width: 20%;
+  min-width: 225px;
+  height: 35%;
+  min-height: 225px;
   display: block;
   background-color: white;
   z-index: 2;
 }
 
+#header {
+  position: absolute;
+  width: 70%;
+  transform: translateX(-50%);
+  top: 5px;
+  left: 40%;
+  width: 750px;
+  height: 125px;
+  display: block;
+  z-index: 2;
+}
+
 #title {
+  text-align: center;
+}
+
+#pane-title {
   text-align: center;
 }
 
@@ -53,13 +71,21 @@
 
 #view-radio {
   position: absolute;
+  padding-left: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   background-color: white;
-  width: 250px;
-  top: 235px;
+  min-width: 250px;
+  top: 40%;
+  width: 20%;
   right: 5px;
   border: 1px solid black;
   display: block;
   z-index: 2;
+}
+
+.radio-label {
+  margin-left: 10px;
 }
 
 .x-label {
@@ -86,6 +112,31 @@
   -webkit-transition: all 200ms;
   transition: all 200ms;
   opacity: 1;
+}
+
+#y-axis-label {
+  transform: translateX(-92px) translateY(-1px) rotate(-90deg);
+  width: 5px;
+  height: 5px;
+  /* background-color: black; */
+  z-index: 2;
+  position: absolute;
+  display: block;
+  -webkit-transition: all 200ms;
+  transition: all 200ms;
+  opacity: 1;
+}
+
+#z-axis-label {
+  transform: translateX(-182px) translateY(1px) rotate(-90deg);
+  height: 5px;
+  /* background-color: black; */
+  z-index: 2;
+  position: absolute;
+  display: block;
+  -webkit-transition: all 200ms;
+  transition: all 200ms;
+  opacity: 0;
 }
 
 .z-label {

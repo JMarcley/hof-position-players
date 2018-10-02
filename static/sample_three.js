@@ -14,7 +14,7 @@ var loader = new THREE.FontLoader();
 var font;
 var scaleFactor = 2.2;
 var animationFrames = 50;
-var cameraAnimationFrames = animationFrames * 1.6;
+var cameraAnimationFrames = animationFrames * 1.9;
 var animationState = { y: 0, z: 0, camera: 0 };
 var view = 0;
 var thisPoint = undefined;
@@ -49,6 +49,10 @@ var lookAt = [
 		z: 5
 	}
 ]
+var xLabels;
+var yLabels;
+var zLabels;
+// var didUpdateProjectionMatrix2 = 0;
 loader.load(
 	// resource URL
 	'static/helvetiker_regular.typeface.json',
@@ -127,6 +131,54 @@ function init() {
   light.position.set( -1, 1, -1 ).normalize();
   scene.add( light );
 
+	var xLabels = [
+		[scaleYears(1880), 5, -1],
+		[scaleYears(1890), 5, -1],
+		[scaleYears(1900), 5, -1],
+		[scaleYears(1910), 5, -1],
+		[scaleYears(1920), 5, -1],
+		[scaleYears(1930), 5, -1],
+		[scaleYears(1940), 5, -1],
+		[scaleYears(1950), 5, -1],
+		[scaleYears(1960), 5, -1],
+		[scaleYears(1970), 5, -1],
+		[scaleYears(1980), 5, -1],
+		[scaleYears(1990), 5, -1],
+		[scaleYears(2000), 5, -1],
+		[scaleYears(2010), 5, -1]
+	];
+	var yLabels = [
+		[scaleYears(1875), 10, -1],
+		[scaleYears(1875), 20, -1],
+		[scaleYears(1875), 30, -1],
+		[scaleYears(1875), 40, -1],
+		[scaleYears(1875), 50, -1],
+		[scaleYears(1875), 60, -1],
+		[scaleYears(1875), 70, -1],
+		[scaleYears(1875), 80, -1],
+		[scaleYears(1875), 90, -1],
+		[scaleYears(1875), 100, -1],
+		[scaleYears(1875), 110, -1],
+		[scaleYears(1875), 120, -1],
+		[scaleYears(1875), 130, -1],
+		[scaleYears(1875), 140, -1],
+		[scaleYears(1875), 150, -1],
+		[scaleYears(1875), 160, -1],
+		[scaleYears(1875), 170, -1]
+	];
+	var zLabels = [
+		[scaleYears(1875), -1, scaleZ(1)],
+		[scaleYears(1875), -1, scaleZ(2)],
+		[scaleYears(1875), -1, scaleZ(3)],
+		[scaleYears(1875), -1, scaleZ(4)],
+		[scaleYears(1875), -1, scaleZ(5)],
+		[scaleYears(1875), -1, scaleZ(6)],
+		[scaleYears(1875), -1, scaleZ(7)],
+		[scaleYears(1875), -1, scaleZ(8)],
+		[scaleYears(1875), -1, scaleZ(9)],
+		[scaleYears(1875), -1, scaleZ(10)],
+		[scaleYears(1875), -1, scaleZ(11)]
+	];
 	var lines0 = [
 		[[scaleYears(1875), 10, -1], [scaleYears(2010), 10, -1]],
 		[[scaleYears(1875), 20, -1], [scaleYears(2010), 20, -1]],
@@ -172,20 +224,20 @@ function init() {
 		[[scaleYears(1875), -1, scaleZ(9)], [scaleYears(2010), -1, scaleZ(9)]],
 		[[scaleYears(1875), -1, scaleZ(10)], [scaleYears(2010), -1, scaleZ(10)]],
 		[[scaleYears(1875), -1, scaleZ(11)], [scaleYears(2010), -1, scaleZ(11)]],
-		[[scaleYears(1880), -1, scaleZ(1)], [scaleYears(1880), -1, scaleZ(11)]],
-		[[scaleYears(1890), -1, scaleZ(1)], [scaleYears(1890), -1, scaleZ(11)]],
-		[[scaleYears(1900), -1, scaleZ(1)], [scaleYears(1900), -1, scaleZ(11)]],
-		[[scaleYears(1910), -1, scaleZ(1)], [scaleYears(1910), -1, scaleZ(11)]],
-		[[scaleYears(1920), -1, scaleZ(1)], [scaleYears(1920), -1, scaleZ(11)]],
-		[[scaleYears(1930), -1, scaleZ(1)], [scaleYears(1930), -1, scaleZ(11)]],
-		[[scaleYears(1940), -1, scaleZ(1)], [scaleYears(1940), -1, scaleZ(11)]],
-		[[scaleYears(1950), -1, scaleZ(1)], [scaleYears(1950), -1, scaleZ(11)]],
-		[[scaleYears(1960), -1, scaleZ(1)], [scaleYears(1960), -1, scaleZ(11)]],
-		[[scaleYears(1970), -1, scaleZ(1)], [scaleYears(1970), -1, scaleZ(11)]],
-		[[scaleYears(1980), -1, scaleZ(1)], [scaleYears(1980), -1, scaleZ(11)]],
-		[[scaleYears(1990), -1, scaleZ(1)], [scaleYears(1990), -1, scaleZ(11)]],
-		[[scaleYears(2000), -1, scaleZ(1)], [scaleYears(2000), -1, scaleZ(11)]],
-		[[scaleYears(2010), -1, scaleZ(1)], [scaleYears(2010), -1, scaleZ(11)]]
+		[[scaleYears(1880), -1, scaleZ(0.5)], [scaleYears(1880), -1, scaleZ(11)]],
+		[[scaleYears(1890), -1, scaleZ(0.5)], [scaleYears(1890), -1, scaleZ(11)]],
+		[[scaleYears(1900), -1, scaleZ(0.5)], [scaleYears(1900), -1, scaleZ(11)]],
+		[[scaleYears(1910), -1, scaleZ(0.5)], [scaleYears(1910), -1, scaleZ(11)]],
+		[[scaleYears(1920), -1, scaleZ(0.5)], [scaleYears(1920), -1, scaleZ(11)]],
+		[[scaleYears(1930), -1, scaleZ(0.5)], [scaleYears(1930), -1, scaleZ(11)]],
+		[[scaleYears(1940), -1, scaleZ(0.5)], [scaleYears(1940), -1, scaleZ(11)]],
+		[[scaleYears(1950), -1, scaleZ(0.5)], [scaleYears(1950), -1, scaleZ(11)]],
+		[[scaleYears(1960), -1, scaleZ(0.5)], [scaleYears(1960), -1, scaleZ(11)]],
+		[[scaleYears(1970), -1, scaleZ(0.5)], [scaleYears(1970), -1, scaleZ(11)]],
+		[[scaleYears(1980), -1, scaleZ(0.5)], [scaleYears(1980), -1, scaleZ(11)]],
+		[[scaleYears(1990), -1, scaleZ(0.5)], [scaleYears(1990), -1, scaleZ(11)]],
+		[[scaleYears(2000), -1, scaleZ(0.5)], [scaleYears(2000), -1, scaleZ(11)]],
+		[[scaleYears(2010), -1, scaleZ(0.5)], [scaleYears(2010), -1, scaleZ(11)]]
 	];
 	var material = new THREE.LineBasicMaterial({
 		color:0x999999,
@@ -230,38 +282,121 @@ function init() {
 	title.appendChild( titleText );
 	pane.appendChild( title );
 
-	var xAxis = document.createElement("Div");
-	xAxis.setAttribute("id", "x-axis");
-	document.body.appendChild( xAxis );
-	// var xLabel = document.createElement("P");
-	// xLabel.setAttribute("class", "x-label");
-	// xAxis.appendChild( xlabel );
-	for (var i = 0; i < 14; i++) {
-		var xLabel = document.createElement("SPAN");
-		xLabel.setAttribute("class", "x-label");
-		xAxis.appendChild( xLabel );
-		var xLabelText = document.createTextNode( 10 * i + 1880 );
-		xLabel.appendChild( xLabelText );
-	}
-
-	var yAxis = document.createElement("Div");
-	yAxis.setAttribute("id", "y-axis");
-	document.body.appendChild( yAxis );
-	// var xLabel = document.createElement("P");
-	// xLabel.setAttribute("class", "x-label");
-	// xAxis.appendChild( xlabel );
-	for (var i = 0; i < 17; i++) {
-		var yLabel = document.createElement("P");
-		yLabel.setAttribute("class", "y-label");
-		yAxis.appendChild( yLabel );
-		var yLabelText = document.createTextNode( 170 - 10 * i );
-		yLabel.appendChild( yLabelText );
-	}
+	// var xAxis = document.createElement("Div");
+	// xAxis.setAttribute("id", "x-axis");
+	// document.body.appendChild( xAxis );
+	// // var xLabel = document.createElement("P");
+	// // xLabel.setAttribute("class", "x-label");
+	// // xAxis.appendChild( xlabel );
+	// for (var i = 0; i < 14; i++) {
+	// 	var xLabel = document.createElement("SPAN");
+	// 	xLabel.setAttribute("class", "x-label");
+	// 	xAxis.appendChild( xLabel );
+	// 	var xLabelText = document.createTextNode( 10 * i + 1880 );
+	// 	xLabel.appendChild( xLabelText );
+	// }
+	//
+	// var yAxis = document.createElement("Div");
+	// yAxis.setAttribute("id", "y-axis");
+	// document.body.appendChild( yAxis );
+	// // var xLabel = document.createElement("P");
+	// // xLabel.setAttribute("class", "x-label");
+	// // xAxis.appendChild( xlabel );
+	// for (var i = 0; i < 17; i++) {
+	// 	var yLabel = document.createElement("P");
+	// 	yLabel.setAttribute("class", "y-label");
+	// 	yAxis.appendChild( yLabel );
+	// 	var yLabelText = document.createTextNode( 170 - 10 * i );
+	// 	yLabel.appendChild( yLabelText );
+	// }
 
   window.addEventListener( 'resize', onWindowResize, false );
   // document.addEventListener( 'mousedown', onDocumentMouseDown, false );
   document.addEventListener( 'mousemove', onDocumentMouseMove, false );
   // document.addEventListener( 'mouseleave', onDocumentMouseLeave, false );
+
+	for (var i = 0; i < xLabels.length; i++) {
+		var pos = new THREE.Vector3(
+			xLabels[i][0] - camera.position.x,
+			xLabels[i][1] - camera.position.y,
+			xLabels[i][2] - camera.position.z
+		);
+		var posXY = pos.applyMatrix4(camera.projectionMatrix);
+		var left = pos.x * window.innerWidth / 2 + window.innerWidth / 2;
+		var bottom = pos.y * window.innerHeight / 2 + window.innerHeight / 2;
+		var box = document.createElement("DIV");
+		box.setAttribute("class", "x-label");
+		box.style.left = left;
+		box.style.bottom = bottom;
+		var label = document.createElement("P");
+		var labelText = document.createTextNode( 10 * i + 1880 );
+		box.appendChild( label );
+		label.appendChild( labelText );
+		document.body.appendChild( box );
+	}
+	for (var i = 0; i < yLabels.length; i++) {
+		var pos = new THREE.Vector3(
+			yLabels[i][0] - camera.position.x,
+			yLabels[i][1] - camera.position.y,
+			yLabels[i][2] - camera.position.z
+		);
+		console.log(pos);
+		var posXY = pos.applyMatrix4(camera.projectionMatrix);
+		console.log(posXY);
+		console.log(window.innerWidth);
+		var left = posXY.x * window.innerWidth / 2 + window.innerWidth / 2;
+		var bottom = posXY.y * window.innerHeight / 2 + window.innerHeight / 2;
+		console.log(left);
+		console.log(bottom);
+		var box = document.createElement("DIV");
+		box.setAttribute("class", "y-label");
+		box.style.left = left;
+		box.style.bottom = bottom;
+		var label = document.createElement("P");
+		var labelText = document.createTextNode( 10 * i + 10 );
+		box.appendChild( label );
+		label.appendChild( labelText );
+		document.body.appendChild( box );
+	}
+
+	for (var i = 0; i < zLabels.length; i++) {
+		var pos = new THREE.Vector3(
+			zLabels[i][0] - cameraPosition[1].x,
+			zLabels[i][2] - cameraPosition[1].z,
+			zLabels[i][1] - cameraPosition[1].y
+		);
+		var posXY = pos.applyMatrix4(camera.projectionMatrix);
+		var left = posXY.x * window.innerWidth / 2 + window.innerWidth / 2;
+		var bottom = posXY.y * window.innerHeight / 2 + window.innerHeight / 2;
+		var box = document.createElement("DIV");
+		box.setAttribute("class", "z-label");
+		box.style.left = left;
+		box.style.bottom = bottom;
+		var label = document.createElement("P");
+		var labelText = document.createTextNode( 11- 1 * i );
+		box.appendChild( label );
+		label.appendChild( labelText );
+		document.body.appendChild( box );
+	}
+	// // console.log(lines0[0][0]);
+	// var obj = new THREE.Object3D();
+	// obj.position.x = lines0[0][0][0];
+	// obj.position.y = lines0[0][0][1];
+	// obj.position.z = lines0[0][0][2];
+	// obj.martixWorldNeedsUpdate = true;
+	// // console.log(camera.projectionMatrix * obj.positi);
+	// // console.log(obj.getWorldPosition());
+	// var pos = new THREE.Vector3(lines0[0][0][0] - camera.position.x, lines0[0][0][1]-camera.position.y, lines0[0][0][2]-camera.position.z);
+	// console.log(pos.applyMatrix4(camera.projectionMatrix));
+	// var left = pos.x * window.innerWidth / 2 + window.innerWidth / 2;
+	// var bottom = pos.y * window.innerHeight / 2 + window.innerHeight / 2;
+	// console.log(pos.applyMatrix4(camera.projectionMatrixInverse));
+	// var box = document.createElement("DIV");
+	// box.setAttribute("id", "box");
+	// box.style.left = left;
+	// box.style.bottom = bottom;
+	// document.body.appendChild( box );
+	// // console.log(XY);
 }
 
 function loadData(cb) {
@@ -484,6 +619,13 @@ function appendText(data) {
 
 function animatePoints() {
 	view = checkRadio();
+	// if (didUpdateProjectionMatrix2 <= 1) {
+	// 	setupCameraProjections();
+	// 	didUpdateProjectionMatrix2 = didUpdateProjectionMatrix2 + 1;
+	// } else if (didUpdateProjectionMatrix2 === 2) {
+	// 	resetCameraProjection();
+	// 	didUpdateProjectionMatrix2 = didUpdateProjectionMatrix2 + 1;
+	// }
 	if (view == 0 && animationState.camera !== 0) {
 		console.log('move camera to 0');
 		animationState.camera = animationState.camera - 1;
@@ -580,6 +722,48 @@ function animatePoints() {
 			// particleSystem.children[i].material.needsUpdate = true;
 		}
 	}
+
+	if (animationState.y == animationFrames && animationState !== animationFrames) {
+		var showAxis = document.getElementsByClassName("y-label");
+		for (var i = 0; i < showAxis.length; i++) {
+			showAxis[i].style.opacity = 1;
+		}
+		var showAxis = document.getElementsByClassName("x-label");
+		for (var i = 0; i < showAxis.length; i++) {
+			showAxis[i].style.opacity = 1;
+		}
+	}
+	if (animationState.y == animationFrames - 1 && animationState !== animationFrames) {
+		var showAxis = document.getElementsByClassName("y-label");
+		for (var i = 0; i < showAxis.length; i++) {
+			showAxis[i].style.opacity = 0;
+		}
+		var showAxis = document.getElementsByClassName("x-label");
+		for (var i = 0; i < showAxis.length; i++) {
+			showAxis[i].style.opacity = 0;
+		}
+	}
+	if (animationState.z == animationFrames && animationState.y !== animationFrames) {
+		var showAxis = document.getElementsByClassName("z-label");
+		for (var i = 0; i < showAxis.length; i++) {
+			showAxis[i].style.opacity = 1;
+		}
+		var showAxis = document.getElementsByClassName("x-label");
+		for (var i = 0; i < showAxis.length; i++) {
+			showAxis[i].style.opacity = 1;
+		}
+	}
+	if (animationState.z == animationFrames - 1 && animationState !== animationFrames) {
+		var showAxis = document.getElementsByClassName("z-label");
+		for (var i = 0; i < showAxis.length; i++) {
+			showAxis[i].style.opacity = 0;
+		}
+		var showAxis = document.getElementsByClassName("x-label");
+		for (var i = 0; i < showAxis.length; i++) {
+			showAxis[i].style.opacity = 0;
+		}
+	}
+
 	// if (view == 0 && animationState.y == animationFrames && animationState.z == 0) {
 	// 	particleSystemIntermediate = particleSystem.clone();
 	// 	particleSystem = new THREE.Group();
@@ -873,6 +1057,60 @@ function determineMaxYear(data) {
   }
   return maxYear;
 }
+
+// function setupCameraProjections() {
+// 	console.log('setup camera');
+// 	// var camera2 = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+// 	camera.position.x = cameraPosition[1].x;
+// 	camera.position.y = cameraPosition[1].y;
+// 	camera.position.z = cameraPosition[1].z;
+// 	camera.lookAt( new THREE.Vector3(
+// 		lookAt[2].x,
+// 		lookAt[2].y,
+// 		lookAt[2].z
+// 	) );
+// 	camera.updateProjectionMatrix();
+//
+// 	for (var i = 0; i < zLabels.length; i++) {
+// 		var pos = new THREE.Vector3(
+// 			zLabels[i][0] - cameraPosition[1].x,
+// 			zLabels[i][2] - cameraPosition[1].z,
+// 			zLabels[i][1] - cameraPosition[1].y
+// 		);
+// 		// console.log(new THREE.Vector3(
+// 		// 			lookAt[2].x - cameraPosition[1].x,
+// 		// 			lookAt[2].y - cameraPosition[1].y + 160,
+// 		// 			lookAt[2].z - cameraPosition[1].z
+// 		// 		));
+// 		// console.log(pos);
+// 		// console.log(pos.applyMatrix4(camera.projectionMatrix));
+// 		var posXY = pos.applyMatrix4(camera.projectionMatrix);
+// 		console.log(posXY);
+// 		var left = posXY.x * window.innerWidth / 2 + window.innerWidth / 2;
+// 		var bottom = posXY.y * window.innerHeight / 2 + window.innerHeight / 2;
+// 		console.log(left);
+// 		console.log(bottom);
+// 		var box = document.createElement("DIV");
+// 		box.setAttribute("class", "z-label");
+// 		box.style.left = left;
+// 		box.style.bottom = bottom;
+// 		var label = document.createElement("P");
+// 		var labelText = document.createTextNode( 11- 1 * i );
+// 		box.appendChild( label );
+// 		label.appendChild( labelText );
+// 		document.body.appendChild( box );
+// 	}
+// }
+//
+// function resetCameraProjection() {
+// 	console.log('reset camera');
+// 	console.log(camera.projectionMatrix);
+// 	camera.position.x = cameraPosition[0].x;
+//   camera.position.y = cameraPosition[0].y;
+//   camera.position.z = cameraPosition[0].z;
+// 	camera.lookAt( new THREE.Vector3( lookAt[0].x, lookAt[0].y, lookAt[0].z ) );
+// 	camera.updateProjectionMatrix();
+// }
 // var scene = new THREE.Scene();
 // var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 //

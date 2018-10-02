@@ -28,7 +28,7 @@
   font-weight: bold;
 }
 
-#x-axis {
+/* #x-axis {
   position: absolute;
   bottom: 50px;
   left: 94px;
@@ -49,7 +49,7 @@
 .y-label {
   line-height: .7em;
   padding-top: 1.5px;
-}
+} */
 
 #view-radio {
   position: absolute;
@@ -60,4 +60,43 @@
   border: 1px solid black;
   display: block;
   z-index: 2;
+}
+
+.x-label {
+  transform: translateX(15px) rotateZ(55deg);
+  width: 5px;
+  height: 5px;
+  /* background-color: black; */
+  z-index: 2;
+  position: absolute;
+  display: block;
+  -webkit-transition: all 200ms;
+  transition: all 200ms;
+  opacity: 1;
+}
+
+.y-label {
+  transform: translateX(-32px) translateY(-19px);
+  width: 5px;
+  height: 5px;
+  /* background-color: black; */
+  z-index: 2;
+  position: absolute;
+  display: block;
+  -webkit-transition: all 200ms;
+  transition: all 200ms;
+  opacity: 1;
+}
+
+.z-label {
+  transform: translateX(-22px) translateY(-24px);
+  width: 5px;
+  height: 5px;
+  /* background-color: black; */
+  z-index: 2;
+  position: absolute;
+  display: block;
+  opacity: 0;
+  -webkit-transition: all 200ms;
+  transition: all 200ms;
 }

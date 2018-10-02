@@ -790,7 +790,7 @@ function animatePoints() {
 	}
 	if (animationState.z == animationFrames - 1 && animationState !== animationFrames) {
 		var showAxis = document.getElementsByClassName("z-label");
-		var axisLabel = document.getElementById("y-axis-label");
+		var axisLabel = document.getElementById("z-axis-label");
 		axisLabel.style.opacity = 0;
 		for (var i = 0; i < showAxis.length; i++) {
 			showAxis[i].style.opacity = 0;

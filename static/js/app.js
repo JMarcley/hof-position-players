@@ -52,29 +52,6 @@ var lookAt = [
 var xLabels;
 var yLabels;
 var zLabels;
-// var didUpdateProjectionMatrix2 = 0;
-loader.load(
-	// resource URL
-	'static/helvetiker_regular.typeface.json',
-
-	// onLoad callback
-	function ( font ) {
-		// do something with the font
-		font = font;
-    // console.log(font);
-    // console.log(new THREE.Font(font.data));
-	},
-
-	// onProgress callback
-	function ( xhr ) {
-		console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-	},
-
-	// onError callback
-	function ( err ) {
-		console.log( 'An error happened' );
-	}
-);
 
 init();
 loadData(buildScene);
@@ -292,38 +269,64 @@ function init() {
 	title.appendChild( titleText );
 	header.appendChild( title );
 
-	// var xAxis = document.createElement("Div");
-	// xAxis.setAttribute("id", "x-axis");
-	// document.body.appendChild( xAxis );
-	// // var xLabel = document.createElement("P");
-	// // xLabel.setAttribute("class", "x-label");
-	// // xAxis.appendChild( xlabel );
-	// for (var i = 0; i < 14; i++) {
-	// 	var xLabel = document.createElement("SPAN");
-	// 	xLabel.setAttribute("class", "x-label");
-	// 	xAxis.appendChild( xLabel );
-	// 	var xLabelText = document.createTextNode( 10 * i + 1880 );
-	// 	xLabel.appendChild( xLabelText );
-	// }
-	//
-	// var yAxis = document.createElement("Div");
-	// yAxis.setAttribute("id", "y-axis");
-	// document.body.appendChild( yAxis );
-	// // var xLabel = document.createElement("P");
-	// // xLabel.setAttribute("class", "x-label");
-	// // xAxis.appendChild( xlabel );
-	// for (var i = 0; i < 17; i++) {
-	// 	var yLabel = document.createElement("P");
-	// 	yLabel.setAttribute("class", "y-label");
-	// 	yAxis.appendChild( yLabel );
-	// 	var yLabelText = document.createTextNode( 170 - 10 * i );
-	// 	yLabel.appendChild( yLabelText );
-	// }
-
   window.addEventListener( 'resize', onWindowResize, false );
   // document.addEventListener( 'mousedown', onDocumentMouseDown, false );
   document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	// document.addEventListener( 'touchend', onDocumentMouseMove, false )
   // document.addEventListener( 'mouseleave', onDocumentMouseLeave, false );
+
+	setAxisLabels();
+}
+
+function setAxisLabels() {
+	var xLabels = [
+		[scaleYears(1880), 5, -1],
+		[scaleYears(1890), 5, -1],
+		[scaleYears(1900), 5, -1],
+		[scaleYears(1910), 5, -1],
+		[scaleYears(1920), 5, -1],
+		[scaleYears(1930), 5, -1],
+		[scaleYears(1940), 5, -1],
+		[scaleYears(1950), 5, -1],
+		[scaleYears(1960), 5, -1],
+		[scaleYears(1970), 5, -1],
+		[scaleYears(1980), 5, -1],
+		[scaleYears(1990), 5, -1],
+		[scaleYears(2000), 5, -1],
+		[scaleYears(2010), 5, -1]
+	];
+	var yLabels = [
+		[scaleYears(1875), 10, -1],
+		[scaleYears(1875), 20, -1],
+		[scaleYears(1875), 30, -1],
+		[scaleYears(1875), 40, -1],
+		[scaleYears(1875), 50, -1],
+		[scaleYears(1875), 60, -1],
+		[scaleYears(1875), 70, -1],
+		[scaleYears(1875), 80, -1],
+		[scaleYears(1875), 90, -1],
+		[scaleYears(1875), 100, -1],
+		[scaleYears(1875), 110, -1],
+		[scaleYears(1875), 120, -1],
+		[scaleYears(1875), 130, -1],
+		[scaleYears(1875), 140, -1],
+		[scaleYears(1875), 150, -1],
+		[scaleYears(1875), 160, -1],
+		[scaleYears(1875), 170, -1]
+	];
+	var zLabels = [
+		[scaleYears(1875), -1, scaleZ(1)],
+		[scaleYears(1875), -1, scaleZ(2)],
+		[scaleYears(1875), -1, scaleZ(3)],
+		[scaleYears(1875), -1, scaleZ(4)],
+		[scaleYears(1875), -1, scaleZ(5)],
+		[scaleYears(1875), -1, scaleZ(6)],
+		[scaleYears(1875), -1, scaleZ(7)],
+		[scaleYears(1875), -1, scaleZ(8)],
+		[scaleYears(1875), -1, scaleZ(9)],
+		[scaleYears(1875), -1, scaleZ(10)],
+		[scaleYears(1875), -1, scaleZ(11)]
+	];
 
 	for (var i = 0; i < xLabels.length; i++) {
 		var pos = new THREE.Vector3(
@@ -407,25 +410,197 @@ function init() {
 		label.appendChild( labelText );
 		document.body.appendChild( box );
 	}
-	// // console.log(lines0[0][0]);
-	// var obj = new THREE.Object3D();
-	// obj.position.x = lines0[0][0][0];
-	// obj.position.y = lines0[0][0][1];
-	// obj.position.z = lines0[0][0][2];
-	// obj.martixWorldNeedsUpdate = true;
-	// // console.log(camera.projectionMatrix * obj.positi);
-	// // console.log(obj.getWorldPosition());
-	// var pos = new THREE.Vector3(lines0[0][0][0] - camera.position.x, lines0[0][0][1]-camera.position.y, lines0[0][0][2]-camera.position.z);
-	// console.log(pos.applyMatrix4(camera.projectionMatrix));
-	// var left = pos.x * window.innerWidth / 2 + window.innerWidth / 2;
-	// var bottom = pos.y * window.innerHeight / 2 + window.innerHeight / 2;
-	// console.log(pos.applyMatrix4(camera.projectionMatrixInverse));
-	// var box = document.createElement("DIV");
-	// box.setAttribute("id", "box");
-	// box.style.left = left;
-	// box.style.bottom = bottom;
-	// document.body.appendChild( box );
-	// // console.log(XY);
+}
+
+function moveAxisLabels() {
+	var xLabels = [
+		[scaleYears(1880), 5, -1],
+		[scaleYears(1890), 5, -1],
+		[scaleYears(1900), 5, -1],
+		[scaleYears(1910), 5, -1],
+		[scaleYears(1920), 5, -1],
+		[scaleYears(1930), 5, -1],
+		[scaleYears(1940), 5, -1],
+		[scaleYears(1950), 5, -1],
+		[scaleYears(1960), 5, -1],
+		[scaleYears(1970), 5, -1],
+		[scaleYears(1980), 5, -1],
+		[scaleYears(1990), 5, -1],
+		[scaleYears(2000), 5, -1],
+		[scaleYears(2010), 5, -1]
+	];
+	var yLabels = [
+		[scaleYears(1875), 10, -1],
+		[scaleYears(1875), 20, -1],
+		[scaleYears(1875), 30, -1],
+		[scaleYears(1875), 40, -1],
+		[scaleYears(1875), 50, -1],
+		[scaleYears(1875), 60, -1],
+		[scaleYears(1875), 70, -1],
+		[scaleYears(1875), 80, -1],
+		[scaleYears(1875), 90, -1],
+		[scaleYears(1875), 100, -1],
+		[scaleYears(1875), 110, -1],
+		[scaleYears(1875), 120, -1],
+		[scaleYears(1875), 130, -1],
+		[scaleYears(1875), 140, -1],
+		[scaleYears(1875), 150, -1],
+		[scaleYears(1875), 160, -1],
+		[scaleYears(1875), 170, -1]
+	];
+	var zLabels = [
+		[scaleYears(1875), -1, scaleZ(1)],
+		[scaleYears(1875), -1, scaleZ(2)],
+		[scaleYears(1875), -1, scaleZ(3)],
+		[scaleYears(1875), -1, scaleZ(4)],
+		[scaleYears(1875), -1, scaleZ(5)],
+		[scaleYears(1875), -1, scaleZ(6)],
+		[scaleYears(1875), -1, scaleZ(7)],
+		[scaleYears(1875), -1, scaleZ(8)],
+		[scaleYears(1875), -1, scaleZ(9)],
+		[scaleYears(1875), -1, scaleZ(10)],
+		[scaleYears(1875), -1, scaleZ(11)]
+	];
+
+	var axisLabels = document.getElementsByClassName("x-label");
+	for (var i = 0; i < axisLabels.length; i++) {
+		var pos = new THREE.Vector3(
+			xLabels[i][0] - cameraPosition[0].x,
+			xLabels[i][1] - cameraPosition[0].y,
+			xLabels[i][2] - cameraPosition[0].z
+		);
+		var posXY = pos.applyMatrix4(camera.projectionMatrix);
+		var left = pos.x * window.innerWidth / 2 + window.innerWidth / 2;
+		var bottom = pos.y * window.innerHeight / 2 + window.innerHeight / 2;
+		axisLabels[i].style.left = left;
+		axisLabels[i].style.bottom = bottom;
+	}
+
+	var axisLabels = document.getElementsByClassName("y-label");
+	for (var i = 0; i < axisLabels.length; i++) {
+		var pos = new THREE.Vector3(
+			yLabels[i][0] - cameraPosition[0].x,
+			yLabels[i][1] - cameraPosition[0].y,
+			yLabels[i][2] - cameraPosition[0].z
+		);
+		var posXY = pos.applyMatrix4(camera.projectionMatrix);
+		var left = pos.x * window.innerWidth / 2 + window.innerWidth / 2;
+		var bottom = pos.y * window.innerHeight / 2 + window.innerHeight / 2;
+		axisLabels[i].style.left = left;
+		axisLabels[i].style.bottom = bottom;
+		var axisTitle = document.getElementById("y-axis-label");
+		if (i == Math.floor(yLabels.length / 2)) {
+			axisTitle.style.left = left;
+			axisTitle.style.bottom = bottom;
+		}
+	}
+
+	var axisLabels = document.getElementsByClassName("z-label");
+	for (var i = 0; i < axisLabels.length; i++) {
+		var pos = new THREE.Vector3(
+			zLabels[i][0] - cameraPosition[1].x,
+			zLabels[i][2] - cameraPosition[1].z,
+			zLabels[i][1] - cameraPosition[1].y
+		);
+		var posXY = pos.applyMatrix4(camera.projectionMatrix);
+		var left = pos.x * window.innerWidth / 2 + window.innerWidth / 2;
+		var bottom = pos.y * window.innerHeight / 2 + window.innerHeight / 2;
+		axisLabels[i].style.left = left;
+		axisLabels[i].style.bottom = bottom;
+
+		var axisTitle = document.getElementById("z-axis-label");
+		if (i == Math.floor(zLabels.length / 2)) {
+			axisTitle.style.left = left;
+			axisTitle.style.bottom = bottom;
+		}
+	}
+
+	// for (var i = 0; i < xLabels.length; i++) {
+	// 	var pos = new THREE.Vector3(
+	// 		xLabels[i][0] - camera.position.x,
+	// 		xLabels[i][1] - camera.position.y,
+	// 		xLabels[i][2] - camera.position.z
+	// 	);
+	// 	var posXY = pos.applyMatrix4(camera.projectionMatrix);
+	// 	var left = pos.x * window.innerWidth / 2 + window.innerWidth / 2;
+	// 	var bottom = pos.y * window.innerHeight / 2 + window.innerHeight / 2;
+	// 	// var box = document.createElement("DIV");
+	// 	var xLabels = document.getElementsByClassName("x-label");
+	// 	for (var i = 0; i < xLabels.length; i++) {
+	// 		console.log(xLabels[i]);
+	// 	}
+	// 	box.setAttribute("class", "x-label");
+	// 	box.style.left = left;
+	// 	box.style.bottom = bottom;
+	// 	var label = document.createElement("P");
+	// 	var labelText = document.createTextNode( 10 * i + 1880 );
+	// 	box.appendChild( label );
+	// 	label.appendChild( labelText );
+	// 	document.body.appendChild( box );
+	// }
+	// for (var i = 0; i < yLabels.length; i++) {
+	// 	var pos = new THREE.Vector3(
+	// 		yLabels[i][0] - camera.position.x,
+	// 		yLabels[i][1] - camera.position.y,
+	// 		yLabels[i][2] - camera.position.z
+	// 	);
+	// 	var posXY = pos.applyMatrix4(camera.projectionMatrix);
+	// 	var left = posXY.x * window.innerWidth / 2 + window.innerWidth / 2;
+	// 	var bottom = posXY.y * window.innerHeight / 2 + window.innerHeight / 2;
+	// 	if (i == Math.floor(yLabels.length / 2)) {
+	// 		var axisLabelDiv = document.createElement("DIV");
+	// 		var axisLabelP = document.createElement("P");
+	// 		var axisLabelText = document.createTextNode("Career WAR");
+	// 		axisLabelP.appendChild( axisLabelText );
+	// 		axisLabelDiv.setAttribute("id", "y-axis-label");
+	// 		axisLabelDiv.appendChild( axisLabelP );
+	// 		axisLabelDiv.style.left = left;
+	// 		axisLabelDiv.style.bottom = bottom;
+	// 		document.body.appendChild( axisLabelDiv );
+	// 	}
+	//
+	// 	var box = document.createElement("DIV");
+	// 	box.setAttribute("class", "y-label");
+	// 	box.style.left = left;
+	// 	box.style.bottom = bottom;
+	// 	var label = document.createElement("P");
+	// 	var labelText = document.createTextNode( 10 * i + 10 );
+	// 	box.appendChild( label );
+	// 	label.appendChild( labelText );
+	// 	document.body.appendChild( box );
+	// }
+	//
+	// for (var i = 0; i < zLabels.length; i++) {
+	// 	var pos = new THREE.Vector3(
+	// 		zLabels[i][0] - cameraPosition[1].x,
+	// 		zLabels[i][2] - cameraPosition[1].z,
+	// 		zLabels[i][1] - cameraPosition[1].y
+	// 	);
+	// 	var posXY = pos.applyMatrix4(camera.projectionMatrix);
+	// 	var left = posXY.x * window.innerWidth / 2 + window.innerWidth / 2;
+	// 	var bottom = posXY.y * window.innerHeight / 2 + window.innerHeight / 2;
+	// 	if (i == Math.floor(zLabels.length / 2)) {
+	// 		var axisLabelDiv = document.createElement("DIV");
+	// 		var axisLabelP = document.createElement("P");
+	// 		var axisLabelText = document.createTextNode("Career WAR per 162 game season");
+	// 		axisLabelP.appendChild( axisLabelText );
+	// 		axisLabelDiv.setAttribute("id", "z-axis-label");
+	// 		axisLabelDiv.appendChild( axisLabelP );
+	// 		axisLabelDiv.style.left = left;
+	// 		axisLabelDiv.style.bottom = bottom;
+	// 		document.body.appendChild( axisLabelDiv );
+	// 	}
+	//
+	// 	var box = document.createElement("DIV");
+	// 	box.setAttribute("class", "z-label");
+	// 	box.style.left = left;
+	// 	box.style.bottom = bottom;
+	// 	var label = document.createElement("P");
+	// 	var labelText = document.createTextNode( 11- 1 * i );
+	// 	box.appendChild( label );
+	// 	label.appendChild( labelText );
+	// 	document.body.appendChild( box );
+	// }
 }
 
 function loadData(cb) {
@@ -440,17 +615,12 @@ function buildScene(data) {
   var maxYear = determineMaxYear(data);
   var years = maxYear - minYear + 1;
   midYear = Math.ceil( years / 2 ) + minYear;
-  // camera.position.x = midYear + years * scaleFactor / 2;
 
   var barsInScreen = 21; // 80
   var scale = scaleYears(barsInScreen, years);
   var offsetL = 21 / 2;
 
   var playerGeo;
-	// var points = new THREE.BufferGeometry();
-	// var positions = [];
-	// var colors = [];
-	// var sizes = [];
 	var color = new THREE.Color();
 
   for (var i = 0; i < data.length; i++) {
@@ -458,7 +628,6 @@ function buildScene(data) {
 		var positions = [];
 		var colors = [];
 		var sizes = [];
-    // var playerColor = new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff } );
     var careerWar = 0;
 		var playerPoint;
     var careerGames = 0;
@@ -547,7 +716,6 @@ function buildScene(data) {
 }
 
 function appendText(data) {
-	// console.log(data.data.stats);
 	if (document.getElementById("pane")) {
 		document.getElementById("pane").outerHTML = "";
 	}
@@ -608,13 +776,6 @@ function appendText(data) {
 	stat1.appendChild( statVal );
 	statVal.appendChild( statNameVal );
 
-	// var statName = document.createElement("SPAN");
-	// var statNameText = document.createTextNode( "Career WAR: " );
-	// stat.appendChild( statNameText );
-	// var statVal = document.createElement("SPAN");
-	// var statNameVal = document.createTextNode( data.careerWar.toFixed(1) );
-	// stat.appendChild( statNameVal );
-
 	var stat2 = document.createElement("P");
 	stat2.setAttribute("class", "stats");
 	pane.appendChild( stat2 );
@@ -648,13 +809,6 @@ function appendText(data) {
 
 function animatePoints() {
 	view = checkRadio();
-	// if (didUpdateProjectionMatrix2 <= 1) {
-	// 	setupCameraProjections();
-	// 	didUpdateProjectionMatrix2 = didUpdateProjectionMatrix2 + 1;
-	// } else if (didUpdateProjectionMatrix2 === 2) {
-	// 	resetCameraProjection();
-	// 	didUpdateProjectionMatrix2 = didUpdateProjectionMatrix2 + 1;
-	// }
 	if (view == 0 && animationState.camera !== 0) {
 		console.log('move camera to 0');
 		animationState.camera = animationState.camera - 1;
@@ -665,7 +819,6 @@ function animatePoints() {
 			camera.userData.lookAt[animationState.camera].y,
 			camera.userData.lookAt[animationState.camera].z
 		) );
-		// camera.lookAt( new THREE.Vector3( 2065, 100, 0 ) );
 		camera.updateProjectionMatrix();
 		for (var i = 0; i < linesZero.length; i++) {
 			linesZero[i].material.opacity = 1 - animationState.camera / cameraAnimationFrames;
@@ -687,7 +840,6 @@ function animatePoints() {
 			camera.userData.lookAt[animationState.camera].y,
 			camera.userData.lookAt[animationState.camera].z
 		) );
-		// camera.lookAt( new THREE.Vector3( 2065, 0, 5 ) );
 		camera.updateProjectionMatrix();
 		for (var i = 0; i < linesZero.length; i++) {
 			linesZero[i].material.opacity = 1 - animationState.camera / cameraAnimationFrames;
@@ -699,56 +851,25 @@ function animatePoints() {
 		}
 	}
 	if (view == 0 && animationState.z !== 0) {
-		// console.log('animate Z in');
+
 		animationState.z = animationState.z - 1;
 		for (var i = 0; i < particleSystem.children.length; i++) {
 			particleSystem.children[i].position.z = particleSystem.children[i].userData.animateZOut[animationState.z].z;
-			// particleSystem.children[i].geometry.attributes.position.array = new Float32Array([
-			// 	particleSystem.children[i].userData.animateZOut[animationState.z].x,
-			// 	particleSystem.children[i].userData.animateZOut[animationState.z].y,
-			// 	particleSystem.children[i].userData.animateZOut[animationState.z].z
-			// ]);
-			// particleSystem.children[i].geometry.attributes.position.needsUpdate = true;
-			// particleSystem.children[i].material.needsUpdate = true;
 		}
 	} else if (view == 0 && animationState.z === 0 && animationState.y !== animationFrames) {
-		// console.log('animate Y out');
 		animationState.y = animationState.y + 1;
 		for (var i = 0; i < particleSystem.children.length; i++) {
 			particleSystem.children[i].position.y = particleSystem.children[i].userData.animateYOut[animationState.y].y;
-			// particleSystem.children[i].geometry.attributes.position.array = new Float32Array([
-			// 	particleSystem.children[i].userData.animateYOut[animationState.y].x,
-			// 	particleSystem.children[i].userData.animateYOut[animationState.y].y,
-			// 	particleSystem.children[i].userData.animateYOut[animationState.y].z
-			// ]);
-			// particleSystem.children[i].geometry.attributes.position.needsUpdate = true;
-			// particleSystem.children[i].material.needsUpdate = true;
 		}
 	} else if (view == 1 && animationState.y !== 0) {
-		// console.log('animate Y in');
 		animationState.y = animationState.y - 1;
 		for (var i = 0; i < particleSystem.children.length; i++) {
 			particleSystem.children[i].position.y = particleSystem.children[i].userData.animateYOut[animationState.y].y;
-			// particleSystem.children[i].geometry.attributes.position.array = new Float32Array([
-			// 	particleSystem.children[i].userData.animateYOut[animationState.y].x,
-			// 	particleSystem.children[i].userData.animateYOut[animationState.y].y,
-			// 	particleSystem.children[i].userData.animateYOut[animationState.y].z
-			// ]);
-			// particleSystem.children[i].geometry.attributes.position.needsUpdate = true;
-			// particleSystem.children[i].material.needsUpdate = true;
 		}
 	} else if (view == 1 && animationState.z !== animationFrames) {
-		// console.log('animate Z out');
 		animationState.z = animationState.z + 1;
 		for (var i = 0; i < particleSystem.children.length; i++) {
 			particleSystem.children[i].position.z = particleSystem.children[i].userData.animateZOut[animationState.z].z;
-			// particleSystem.children[i].geometry.attributes.position.array = new Float32Array([
-			// 	particleSystem.children[i].userData.animateZOut[animationState.z].x,
-			// 	particleSystem.children[i].userData.animateZOut[animationState.z].y,
-			// 	particleSystem.children[i].userData.animateZOut[animationState.z].z
-			// ]);
-			// particleSystem.children[i].geometry.attributes.position.needsUpdate = true;
-			// particleSystem.children[i].material.needsUpdate = true;
 		}
 	}
 
@@ -800,22 +921,6 @@ function animatePoints() {
 			showAxis[i].style.opacity = 0;
 		}
 	}
-
-	// if (view == 0 && animationState.y == animationFrames && animationState.z == 0) {
-	// 	particleSystemIntermediate = particleSystem.clone();
-	// 	particleSystem = new THREE.Group();
-	// 	for (var i = 0; i < particleSystem.children.length; i++) {
-	// 		particleSystem.add(particleSystemIntermediate.children[i]);
-	// 	}
-	// 	resetGroup = false;
-	// } else if (view == 1 && animationState.y == 0 && animationState.z == animationFrames) {
-	// 	particleSystemIntermediate = particleSystem.clone();
-	// 	particleSystem = new THREE.Group();
-	// 	for (var i = 0; i < particleSystem.children.length; i++) {
-	// 		particleSystem.add(particleSystemIntermediate.children[i]);
-	// 	}
-	// 	resetGroup = false;
-	// }
 }
 
 function animate() {
@@ -823,46 +928,26 @@ function animate() {
 
 	animatePoints();
 
-  // object.rotation.x += 0.01;
-  // object.rotation.y += 0.01;
   raycaster.setFromCamera( mouse, camera );
   var intersects = raycaster.intersectObjects( objects );
   if ( intersects.length > 0 ) {
-    // intersects[0].object.material.color.setHex( Math.random() * 0xffffff );
     for (var i = 0; i < intersects.length; i++) {
-      // console.log(intersects[i].object.name, intersects[i].object.careerWar, intersects[i].object.warPer162);
+      // for each intersected object
     }
-    // var particle = new THREE.Sprite( particleMaterial );
-    // particle.position.copy( intersects[ 0 ].point );
-    // particle.scale.x = particle.scale.y = 16;
-    // scene.add( particle );
+
   }
 
   renderer.render( scene, camera );
 }
-//
-// function onDocumentMouseMove( event ) {
-//   event.preventDefault();
-//   mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-//   mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-// }
+
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize( window.innerWidth, window.innerHeight );
-}
 
-// function onDocumentMouseEnter(event) {
-//   event.preventDefault();
-//
-//   mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
-//   mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
-// }
-//
-// function onDocumentMouseLeave( event ) {
-//
-// }
+	moveAxisLabels();
+}
 
 function checkRadio() {
 	var radios = document.getElementsByName('view-radio');
@@ -885,19 +970,13 @@ function onDocumentMouseMove( event ) {
 
   raycaster.setFromCamera( mouse, camera );
   var intersects = raycaster.intersectObject( particleSystem, true );
-	// console.log(particleSystem);
-	// console.log(raycaster);
   if ( intersects.length > 0 ) {
 		if ( thisPoint === undefined ) {
 			thisPoint = intersects[0].object.index;
 			particleSystem.children[thisPoint].material.size = 10;
 			particleSystem.children[thisPoint].material.size.needsUpdate = true;
-			// particleSystem.children[thisPoint].geometry.attributes.size.array = 10;
-			// particleSystem.children[thisPoint].geometry.attributes.size.needsUpdate = true;
 		}
-		// console.log(particleSystem.children[thisPoint].geometry.attributes);
 		if (intersects[0].object.index !== thisPoint) {
-			// console.log('OLD POINT: ', particleSystem.children[thisPoint]);
 			particleSystem.children[thisPoint].material.size = 4;
 			particleSystem.children[thisPoint].material.size.needsUpdate = true;
 			thisPoint = intersects[0].object.index;
@@ -906,61 +985,9 @@ function onDocumentMouseMove( event ) {
 
 			thisPoint = intersects[0].object.index;
 		}
-		// var geometry = intersects[0].object.geometry;
-		// var attributes = geometry.attributes;
-		// if ( thisPoint != intersects[0].index ) {
-		// 	// console.log(highlight);
-		// 	console.log(particleSystem);
-		// 	console.log(attributes);
-		// 	highlight = intersects[0].index;
-		// 	// console.log(attributes.size[highlight]);
-		//
-		// 	attributes.size.array = 10
-		// 	attributes.size.needsUpdate = true;
-		// }
-    // var index = intersects[0].object.index;
-		// console.log(intersects[0].index);
-    // console.log(meta[intersects[0].object.index]);
-  	// intersects[0].object.material.color.setHex( Math.random() * 0xffffff );
-
-    // var pane = new THREE.PlaneBufferGeometry(20, 20, 1, 1)
-    // var material = new THREE.MeshBasicMaterial( {color: 0x333333 } );
-    // dataPane = new THREE.Mesh( pane, material );
-    // dataPane.position.x = meta[index].position.x;
-    // dataPane.position.y = meta[index].position.y;
-    // dataPane.position.z = 10;
-    // scene.add(dataPane);
 
     appendText(meta[thisPoint]);
 
-    // console.log(font);
-
-  	// var geometry = new THREE.TextGeometry( 'Hello three.js!', {
-  	// 	font: font,
-  	// 	size: 80,
-  	// 	height: 1,
-  	// 	curveSegments: 12,
-  	// 	bevelEnabled: true,
-  	// 	bevelThickness: 10,
-  	// 	bevelSize: 8,
-  	// 	bevelSegments: 5
-  	// } );
-
-    // var text = new THREE.Mesh(geometry, material);
-    // text.position.x = meta[index].position.x;
-    // text.position.y = meta[index].position.y;
-    // text.position.z = 10;
-    // scene.add(text);
-  	// var particle = new THREE.Sprite( particleMaterial );
-  	// particle.position.copy( intersects[ 0 ].point );
-  	// particle.scale.x = particle.scale.y = 16;
-  	// scene.add( particle );
-  } else {
-		// if (thisPoint !== undefined) {
-		// 	particleSystem.children[thisPoint].material.size = 4;
-		// 	particleSystem.children[thisPoint].material.size.needsUpdate = true;
-		// 	thisPoint = undefined;
-		// }
   }
   /*
   // Parse all the faces
@@ -1072,9 +1099,7 @@ function orderByYear(a, b) {
 function determineMinYear(data) {
   var minYear = 1950;
   for (var i = 0; i < data.length; i++) {
-    // console.log(data[i]);
     for (var j = 0; j < data[i].stats.length; j++) {
-      // console.log(data[i].stats[j]);
       if (minYear > data[i].stats[j].year) {
         minYear = data[i].stats[j].year;
       }
@@ -1094,91 +1119,3 @@ function determineMaxYear(data) {
   }
   return maxYear;
 }
-
-// function setupCameraProjections() {
-// 	console.log('setup camera');
-// 	// var camera2 = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-// 	camera.position.x = cameraPosition[1].x;
-// 	camera.position.y = cameraPosition[1].y;
-// 	camera.position.z = cameraPosition[1].z;
-// 	camera.lookAt( new THREE.Vector3(
-// 		lookAt[2].x,
-// 		lookAt[2].y,
-// 		lookAt[2].z
-// 	) );
-// 	camera.updateProjectionMatrix();
-//
-// 	for (var i = 0; i < zLabels.length; i++) {
-// 		var pos = new THREE.Vector3(
-// 			zLabels[i][0] - cameraPosition[1].x,
-// 			zLabels[i][2] - cameraPosition[1].z,
-// 			zLabels[i][1] - cameraPosition[1].y
-// 		);
-// 		// console.log(new THREE.Vector3(
-// 		// 			lookAt[2].x - cameraPosition[1].x,
-// 		// 			lookAt[2].y - cameraPosition[1].y + 160,
-// 		// 			lookAt[2].z - cameraPosition[1].z
-// 		// 		));
-// 		// console.log(pos);
-// 		// console.log(pos.applyMatrix4(camera.projectionMatrix));
-// 		var posXY = pos.applyMatrix4(camera.projectionMatrix);
-// 		console.log(posXY);
-// 		var left = posXY.x * window.innerWidth / 2 + window.innerWidth / 2;
-// 		var bottom = posXY.y * window.innerHeight / 2 + window.innerHeight / 2;
-// 		console.log(left);
-// 		console.log(bottom);
-// 		var box = document.createElement("DIV");
-// 		box.setAttribute("class", "z-label");
-// 		box.style.left = left;
-// 		box.style.bottom = bottom;
-// 		var label = document.createElement("P");
-// 		var labelText = document.createTextNode( 11- 1 * i );
-// 		box.appendChild( label );
-// 		label.appendChild( labelText );
-// 		document.body.appendChild( box );
-// 	}
-// }
-//
-// function resetCameraProjection() {
-// 	console.log('reset camera');
-// 	console.log(camera.projectionMatrix);
-// 	camera.position.x = cameraPosition[0].x;
-//   camera.position.y = cameraPosition[0].y;
-//   camera.position.z = cameraPosition[0].z;
-// 	camera.lookAt( new THREE.Vector3( lookAt[0].x, lookAt[0].y, lookAt[0].z ) );
-// 	camera.updateProjectionMatrix();
-// }
-// var scene = new THREE.Scene();
-// var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-//
-// var renderer = new THREE.WebGLRenderer();
-// renderer.setSize( window.innerWidth, window.innerHeight );
-// document.body.appendChild( renderer.domElement );
-//
-// window.addEventListener('resize', function() {
-//   var width = window.innerWidth;
-//   var height = window.innerHeight;
-//   renderer.setSize( width / height );
-//   camera.aspect( width / height );
-//   camera.updateProjectionMatrix();
-// });
-//
-// var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-// var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-// var cube = new THREE.Mesh( geometry, material );
-// scene.add( cube );
-//
-// camera.position.z = 5;
-//
-// var animate = function () {
-//   requestAnimationFrame( animate );
-//
-//   cube.rotation.x += 0.01;
-//   cube.rotation.y += 0.01;
-//
-//   renderer.render( scene, camera );
-// };
-//
-//
-//
-// animate();

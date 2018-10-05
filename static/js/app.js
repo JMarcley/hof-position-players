@@ -1073,7 +1073,7 @@ function loadingMessage() {
 	var title = "Analysis of Hall of Fame Position Players by Wins Above Replacement";
 	var info1 = "This visualization shows the Wins Above Replacement statistic of every position player inducted into the Hall of Fame. Two views are available on the dependent axis: career WAR and career mean WAR per season normalized to a 162 game season";
 	var info2 = "This is a project I started because I am a baseball statistic nerd and as a way to learn some new technologies. This is a work in progress, so stay tuned."
-	var info3 = "Note: This page is NOT mobile friendly."
+	var info3 = "Note: If you are on a mobile device turn back now."
 	var messages = [info1, info2, info3];
 
 	var loadingContainer = document.createElement("DIV");

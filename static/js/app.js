@@ -1,3 +1,7 @@
+//
+var DEV = false;
+//
+
 var container, stats;
 var camera, scene, renderer;
 var particleMaterial;
@@ -58,6 +62,8 @@ loadData(buildScene);
 animate();
 
 function init() {
+	loadingMessage();
+
   camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
   camera.position.x = cameraPosition[0].x;
   camera.position.y = cameraPosition[0].y;
@@ -101,61 +107,13 @@ function init() {
   renderer.setSize( window.innerWidth, window.innerHeight );
   document.body.appendChild( renderer.domElement );
 
-  var light = new THREE.DirectionalLight( 0xffffff, 1 );
-  light.position.set( 1, -1, 1 ).normalize();
-  scene.add( light );
-  light = new THREE.DirectionalLight( 0x222222, 1 );
-  light.position.set( -1, 1, -1 ).normalize();
-  scene.add( light );
+  // var light = new THREE.DirectionalLight( 0xffffff, 1 );
+  // light.position.set( 1, -1, 1 ).normalize();
+  // scene.add( light );
+  // light = new THREE.DirectionalLight( 0x222222, 1 );
+  // light.position.set( -1, 1, -1 ).normalize();
+  // scene.add( light );
 
-	var xLabels = [
-		[scaleYears(1880), 5, -1],
-		[scaleYears(1890), 5, -1],
-		[scaleYears(1900), 5, -1],
-		[scaleYears(1910), 5, -1],
-		[scaleYears(1920), 5, -1],
-		[scaleYears(1930), 5, -1],
-		[scaleYears(1940), 5, -1],
-		[scaleYears(1950), 5, -1],
-		[scaleYears(1960), 5, -1],
-		[scaleYears(1970), 5, -1],
-		[scaleYears(1980), 5, -1],
-		[scaleYears(1990), 5, -1],
-		[scaleYears(2000), 5, -1],
-		[scaleYears(2010), 5, -1]
-	];
-	var yLabels = [
-		[scaleYears(1875), 10, -1],
-		[scaleYears(1875), 20, -1],
-		[scaleYears(1875), 30, -1],
-		[scaleYears(1875), 40, -1],
-		[scaleYears(1875), 50, -1],
-		[scaleYears(1875), 60, -1],
-		[scaleYears(1875), 70, -1],
-		[scaleYears(1875), 80, -1],
-		[scaleYears(1875), 90, -1],
-		[scaleYears(1875), 100, -1],
-		[scaleYears(1875), 110, -1],
-		[scaleYears(1875), 120, -1],
-		[scaleYears(1875), 130, -1],
-		[scaleYears(1875), 140, -1],
-		[scaleYears(1875), 150, -1],
-		[scaleYears(1875), 160, -1],
-		[scaleYears(1875), 170, -1]
-	];
-	var zLabels = [
-		[scaleYears(1875), -1, scaleZ(1)],
-		[scaleYears(1875), -1, scaleZ(2)],
-		[scaleYears(1875), -1, scaleZ(3)],
-		[scaleYears(1875), -1, scaleZ(4)],
-		[scaleYears(1875), -1, scaleZ(5)],
-		[scaleYears(1875), -1, scaleZ(6)],
-		[scaleYears(1875), -1, scaleZ(7)],
-		[scaleYears(1875), -1, scaleZ(8)],
-		[scaleYears(1875), -1, scaleZ(9)],
-		[scaleYears(1875), -1, scaleZ(10)],
-		[scaleYears(1875), -1, scaleZ(11)]
-	];
 	var lines0 = [
 		[[scaleYears(1875), 10, -1], [scaleYears(2010), 10, -1]],
 		[[scaleYears(1875), 20, -1], [scaleYears(2010), 20, -1]],
@@ -258,16 +216,6 @@ function init() {
 	var titleText = document.createTextNode( "Hover on a point to see more details" );
 	paneTitle.appendChild( titleText );
 	pane.appendChild( paneTitle );
-
-	var header = document.createElement("Div");
-	header.setAttribute("id", "header");
-	document.body.appendChild( header );
-
-	var title = document.createElement("H1");
-	title.setAttribute("id", "title");
-	var titleText = document.createTextNode( "Distribution of Career Batting Wins Above Replacement (WAR) for Hall of Fame Position Players" );
-	title.appendChild( titleText );
-	header.appendChild( title );
 
   window.addEventListener( 'resize', onWindowResize, false );
   // document.addEventListener( 'mousedown', onDocumentMouseDown, false );
@@ -622,6 +570,7 @@ function buildScene(data) {
 
   var playerGeo;
 	var color = new THREE.Color();
+	var sprite = new THREE.TextureLoader().load( 'static/circle.png' );
 
   for (var i = 0; i < data.length; i++) {
 		var points = new THREE.BufferGeometry();
@@ -669,7 +618,7 @@ function buildScene(data) {
 		points.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
 		points.addAttribute( 'size', new THREE.Float32BufferAttribute( sizes, 1 ) );
 
-		var material = new THREE.PointsMaterial({ size: 4 });
+		var material = new THREE.PointsMaterial( { size: 10, sizeAttenuation: false, map: sprite, alphaTest: 0.5, transparent: true } );
 		material.color = [ color.r, color.g, color.b ];
 		material.needsUpdate = true;
 		playerPoint = new THREE.Points( points, material );
@@ -973,14 +922,14 @@ function onDocumentMouseMove( event ) {
   if ( intersects.length > 0 ) {
 		if ( thisPoint === undefined ) {
 			thisPoint = intersects[0].object.index;
-			particleSystem.children[thisPoint].material.size = 10;
+			particleSystem.children[thisPoint].material.size = 20;
 			particleSystem.children[thisPoint].material.size.needsUpdate = true;
 		}
 		if (intersects[0].object.index !== thisPoint) {
-			particleSystem.children[thisPoint].material.size = 4;
+			particleSystem.children[thisPoint].material.size = 10;
 			particleSystem.children[thisPoint].material.size.needsUpdate = true;
 			thisPoint = intersects[0].object.index;
-			particleSystem.children[thisPoint].material.size = 10
+			particleSystem.children[thisPoint].material.size = 20
 			particleSystem.children[thisPoint].material.size.needsUpdate = true;
 
 			thisPoint = intersects[0].object.index;
@@ -1118,4 +1067,53 @@ function determineMaxYear(data) {
     }
   }
   return maxYear;
+}
+
+function loadingMessage() {
+	var title = "Analysis of Hall of Fame Position Players by Wins Above Replacement";
+	var info1 = "This visualization shows the Wins Above Replacement statistic of every position player inducted into the Hall of Fame. Two views are available on the dependent axis: career WAR and career mean WAR per season normalized to a 162 game season";
+	var info2 = "This is a project I started because I am a baseball statistic nerd and as a way to learn some new technologies. This is a work in progress, so stay tuned."
+	var info3 = "Note: This page is NOT mobile friendly."
+	var messages = [info1, info2, info3];
+
+	var loadingContainer = document.createElement("DIV");
+	loadingContainer.setAttribute("id", "loading-container");
+
+	var messageContainer = document.createElement("DIV");
+	messageContainer.setAttribute("id", "loading-message");
+
+	var messagesBox = document.createElement("DIV");
+	messagesBox.setAttribute("id", "message-box");
+	messageContainer.appendChild(messagesBox);
+
+	var messageTitle = document.createElement("H3");
+	var messageTitleText = document.createTextNode(title);
+	messageTitle.appendChild(messageTitleText);
+	messagesBox.appendChild(messageTitle);
+
+	for (var i = 0; i < messages.length; i++) {
+		var messageInfo = document.createElement("P");
+		messageInfo.setAttribute("class", "message-info");
+		var messageInfoText = document.createTextNode(messages[i]);
+		messageInfo.appendChild(messageInfoText);
+		messagesBox.appendChild(messageInfo);
+	}
+
+	var closeButton = document.createElement("BUTTON");
+	var closeButtonText = document.createTextNode("Close");
+	closeButton.appendChild(closeButtonText);
+	closeButton.setAttribute("id", "close-button");
+	closeButton.setAttribute("onClick", "closeMessage()");
+	messagesBox.appendChild(closeButton);
+
+	document.body.appendChild(loadingContainer);
+	document.body.appendChild(messageContainer);
+
+}
+
+function closeMessage() {
+	document.getElementById("loading-container").style.opacity = 0;
+	document.getElementById("loading-container").style.visibility = "hidden";
+	document.getElementById("loading-message").style.opacity = 0;
+	document.getElementById("loading-message").style.visibility = "hidden";
 }
